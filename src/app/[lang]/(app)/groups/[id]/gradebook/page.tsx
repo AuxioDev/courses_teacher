@@ -30,7 +30,14 @@ async function Gradebook({ params }: Pick<PageProps<"/[lang]/groups/[id]/gradebo
       <Link href={localePath(locale, `/groups/${gradebook.id}`)} className="mb-3 inline-flex items-center gap-1 text-sm text-muted">
         <ChevronLeft width={18} height={18} /> {gradebook.name}
       </Link>
-      <h1 className="text-2xl font-semibold tracking-tight">{t.gradebook.title}</h1>
+      <div className="flex items-start justify-between gap-3">
+        <h1 className="text-2xl font-semibold tracking-tight">{t.gradebook.title}</h1>
+        {gradebook.columns.length > 0 && (
+          <a href={`/api/groups/${gradebook.id}/gradebook?lang=${locale}`} download className="btn-ghost shrink-0">
+            {t.gradebook.export}
+          </a>
+        )}
+      </div>
       <p className="mb-4 mt-0.5 text-sm text-muted">
         {gradebook.course} · {gradebook.name} · {gradebook.termName}
       </p>

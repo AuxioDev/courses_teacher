@@ -151,6 +151,7 @@ export const ru: Dictionary = {
   },
   gradebook: {
     title: "Журнал",
+    export: "Скачать CSV",
     student: "Ученик",
     average: "Средний",
     final: "Итог",
@@ -158,7 +159,7 @@ export const ru: Dictionary = {
     none: "В этой группе пока нет оценок.",
     hint: "Выберите оценку за урок, чтобы исправить её; исправления записываются. Оценки за задания открывают проверку.",
     termLocked: "Этот семестр закрыт, поэтому оценки нельзя изменить.",
-    cellLabel: "{name}, {date}, {type}",
+    cellLabel: "{name}, {date}, {type}: {value}",
   },
   lessons: {
     week: "Неделя",

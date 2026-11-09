@@ -163,7 +163,10 @@ export function GradebookGrid({
                 )}
                 {columns.map((column) => {
                   const cell = row.cells[column.key];
-                  const label = fmt(t.cellLabel, { name: row.name, date: column.date, type: typeLabels[column.type] });
+                  // The visible score is part of the name, so "click 90" works for voice control.
+                  const label = cell
+                    ? fmt(t.cellLabel, { name: row.name, date: column.date, type: typeLabels[column.type], value: formatScore(cell.value) })
+                    : "";
                   return (
                     <td key={column.key} className="border-b border-line px-0.5 py-1 text-center">
                       {!cell ? (

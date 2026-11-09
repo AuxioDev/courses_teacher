@@ -13,7 +13,10 @@
     "sync:check": "node scripts/sync-check.mjs",
     "teacher:create": "tsx scripts/create-teacher.ts",
     "auth:reset-link": "tsx scripts/reset-link.ts",
-    "auth:temp-password": "tsx scripts/temp-password.ts"
+    "auth:temp-password": "tsx scripts/temp-password.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:integration": "vitest run --config vitest.integration.config.ts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.1",
@@ -42,7 +45,8 @@
     "prisma": "^7.10.1",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.7"
   },
   "overrides": {
     "@vercel/cli-config": {

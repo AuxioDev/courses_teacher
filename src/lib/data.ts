@@ -331,7 +331,11 @@ export type GradebookRow = {
 };
 
 export async function getGradebook(id: string) {
-  const teacher = await getCurrentTeacher();
+  return loadGradebook(await getCurrentTeacher(), id);
+}
+
+// Also used by the CSV download, a Route Handler that answers 401 instead of redirecting.
+export async function loadGradebook(teacher: { id: string; timezone: string }, id: string) {
   const group = await db.group.findFirst({
     where: { id, teacherId: teacher.id },
     select: {

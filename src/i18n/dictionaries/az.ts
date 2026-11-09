@@ -151,6 +151,7 @@ export const az: Dictionary = {
   },
   gradebook: {
     title: "Jurnal",
+    export: "CSV yüklə",
     student: "Şagird",
     average: "Orta",
     final: "Yekun",
@@ -158,7 +159,7 @@ export const az: Dictionary = {
     none: "Bu qrupda hələ qiymət yoxdur.",
     hint: "Düzəltmək üçün dərs qiymətini seçin; düzəlişlər qeydə alınır. Ev tapşırığı qiymətləri tapşırığın qiymətini açır.",
     termLocked: "Bu semestr bağlanıb, ona görə qiymətləri dəyişmək olmaz.",
-    cellLabel: "{name}, {date}, {type}",
+    cellLabel: "{name}, {date}, {type}: {value}",
   },
   lessons: {
     week: "Həftə",

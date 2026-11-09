@@ -73,7 +73,7 @@ async function Lesson({ params }: Pick<PageProps<"/[lang]/lessons/[id]">, "param
           </p>
           <p className="text-sm text-muted">
             {lesson.isGroupTeacher ? (
-              <Link href={localePath(locale, `/groups/${lesson.group.id}`)} className="text-accent">
+              <Link href={localePath(locale, `/groups/${lesson.group.id}`)} className="text-accent underline underline-offset-2">
                 {lesson.group.name}
               </Link>
             ) : (

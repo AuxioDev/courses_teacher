@@ -153,6 +153,7 @@ export const en = {
   },
   gradebook: {
     title: "Gradebook",
+    export: "Download CSV",
     student: "Student",
     average: "Average",
     final: "Final",
@@ -160,7 +161,7 @@ export const en = {
     none: "No marks in this group yet.",
     hint: "Select a lesson mark to correct it; corrections are recorded. Homework marks open the grade.",
     termLocked: "This term is locked, so marks can't be changed.",
-    cellLabel: "{name}, {date}, {type}",
+    cellLabel: "{name}, {date}, {type}: {value}",
   },
   lessons: {
     week: "Week",

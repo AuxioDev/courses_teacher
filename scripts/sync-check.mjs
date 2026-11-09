@@ -26,6 +26,10 @@ const SHARED = [
   "src/lib/session-token.ts",
   "src/lib/session.ts",
   "src/lib/upload-policy.ts",
+  "test/db.ts",
+  "test/server-only.ts",
+  "vitest.config.ts",
+  "vitest.integration.config.ts",
 ];
 
 if (!existsSync(path.join(studentRepo, "prisma/schema.prisma"))) {
