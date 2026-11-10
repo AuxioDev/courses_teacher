@@ -22,7 +22,7 @@ export async function readObject(key: string): Promise<ReadableStream<Uint8Array
     const result = await get(key, { access: "private" });
     return result?.statusCode === 200 ? result.stream : null;
   }
-  const file = path.resolve(process.cwd(), process.env.UPLOADS_DIR ?? ".uploads", key);
+  const file = path.resolve(/* turbopackIgnore: true */ process.cwd(), process.env.UPLOADS_DIR ?? ".uploads", key);
   try {
     await stat(file);
     return Readable.toWeb(createReadStream(file)) as ReadableStream<Uint8Array>;
