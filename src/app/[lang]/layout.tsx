@@ -5,6 +5,7 @@ import { locales } from "@/i18n/config";
 import { getI18n } from "@/i18n";
 import "../globals.css";
 import "../role-theme.css";
+import "../motion.css";
 
 const bodyFont = Ysabeau_Office({
   // The shared stylesheet names its sans and mono variables after Geist, so these keep those names.
