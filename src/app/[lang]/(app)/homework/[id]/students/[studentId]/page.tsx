@@ -48,7 +48,7 @@ function Attempt({ attempt, t }: { attempt: ReviewAttempt; t: Dictionary["checki
           <ul className="space-y-1">
             {attempt.files.map((file) => (
               <li key={file.id} className="flex items-baseline gap-2">
-                <a href={`/api/files/${file.id}`} target="_blank" rel="noreferrer" className="truncate text-accent">
+                <a href={`/api/files/${file.id}`} target="_blank" rel="noreferrer" className="truncate py-1 text-accent">
                   {file.name}
                 </a>
                 <span className="shrink-0 text-xs text-muted">{formatBytes(file.size)}</span>
