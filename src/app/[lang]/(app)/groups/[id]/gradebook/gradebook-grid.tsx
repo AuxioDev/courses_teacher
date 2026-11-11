@@ -134,7 +134,7 @@ export function GradebookGrid({
                   className={`${headCell} min-w-[4.75rem] border-b border-line px-1 py-2 text-center font-medium`}
                 >
                   {column.href ? (
-                    <Link href={localePath(locale, column.href)} className="block text-accent">
+                    <Link href={localePath(locale, column.href)} className="block py-1.5 text-accent">
                       {column.date}
                     </Link>
                   ) : (
@@ -155,7 +155,7 @@ export function GradebookGrid({
                   <span className="block break-words leading-tight sm:truncate" title={row.name}>
                     {row.name}
                   </span>
-                  {!row.enrolled && <span className="block text-[11px] font-normal">{t.left}</span>}
+                  {!row.enrolled && <span className="block text-[0.6875rem] font-normal">{t.left}</span>}
                 </th>
                 <td
                   className={`${stickyAverage} border-b px-1 py-1.5 text-center font-mono font-semibold sm:px-2 ${

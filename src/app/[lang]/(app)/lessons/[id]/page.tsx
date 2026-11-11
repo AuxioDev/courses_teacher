@@ -57,7 +57,7 @@ async function Lesson({ params }: Pick<PageProps<"/[lang]/lessons/[id]">, "param
 
   return (
     <>
-      <Link href={localePath(locale, `/lessons?view=week&date=${day}`)} className="mb-3 inline-flex items-center gap-1 text-sm text-muted">
+      <Link href={localePath(locale, `/lessons?view=week&date=${day}`)} className="mb-0 inline-flex min-h-11 items-center gap-1 text-sm text-muted sm:mb-3 sm:min-h-6">
         <ChevronLeft width={18} height={18} /> {t.nav.lessons}
       </Link>
 

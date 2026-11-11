@@ -30,7 +30,7 @@ async function EditHomework({ params }: Pick<PageProps<"/[lang]/homework/[id]/ed
 
   return (
     <div className="max-w-2xl">
-      <Link href={localePath(locale, `/homework/${homework.id}`)} className="mb-3 inline-flex items-center gap-1 text-sm text-muted">
+      <Link href={localePath(locale, `/homework/${homework.id}`)} className="mb-0 inline-flex min-h-11 items-center gap-1 text-sm text-muted sm:mb-3 sm:min-h-6">
         <ChevronLeft width={18} height={18} /> {homework.title}
       </Link>
       <h1 className="text-2xl font-semibold tracking-tight">{t.homeworkPage.editTitle}</h1>

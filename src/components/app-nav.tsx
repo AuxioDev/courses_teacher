@@ -50,7 +50,7 @@ function Bar({ locale, labels, pathname }: ViewProps) {
               <Link
                 href={localePath(locale, path)}
                 aria-current={active ? "page" : undefined}
-                className={`flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium ${
+                className={`flex flex-col items-center gap-0.5 py-2 text-[0.6875rem] font-medium ${
                   active ? "text-accent" : "text-muted"
                 }`}
               >
@@ -69,7 +69,7 @@ function Bar({ locale, labels, pathname }: ViewProps) {
 function Side({ locale, labels, pathname }: ViewProps) {
   return (
     <aside className="fixed inset-y-0 left-0 z-20 hidden w-56 flex-col border-r border-line bg-surface-2 md:flex">
-      <Link href={localePath(locale, "/")} className="flex h-14 items-center gap-2 px-5 text-[15px] font-semibold tracking-tight">
+      <Link href={localePath(locale, "/")} className="flex h-14 items-center gap-2 px-5 text-[0.9375rem] font-semibold tracking-tight">
         <BookIcon className="text-accent" />
         {labels.appName}
       </Link>

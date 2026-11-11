@@ -154,7 +154,7 @@ function MonthGrid({
   for (let key = first; key < last; key = addDays(key, 1)) days.push(key);
   return (
     <div className="mb-4 overflow-hidden rounded-2xl border border-line bg-surface">
-      <div className="grid grid-cols-7 border-b border-line text-center text-[11px] font-semibold uppercase text-muted">
+      <div className="grid grid-cols-7 border-b border-line text-center text-[0.6875rem] font-semibold uppercase text-muted">
         {weekdayNames(locale).map((d) => (
           <div key={d} className="py-2">
             {d}
@@ -182,7 +182,7 @@ function MonthGrid({
                 {dayLessons.slice(0, 3).map((lesson) => (
                   <div
                     key={lesson.id}
-                    className={`truncate rounded px-0.5 font-mono text-[11px] leading-4 sm:px-1 sm:font-sans ${
+                    className={`truncate rounded px-0.5 font-mono text-[0.6875rem] leading-4 sm:px-1 sm:font-sans ${
                       lesson.status === "cancelled"
                         ? "bg-bad-soft text-bad line-through"
                         : lesson.status === "moved"
@@ -195,7 +195,7 @@ function MonthGrid({
                     <span className="hidden sm:inline"> {lesson.group.name}</span>
                   </div>
                 ))}
-                {dayLessons.length > 3 && <div className="text-[11px] text-muted">+{dayLessons.length - 3}</div>}
+                {dayLessons.length > 3 && <div className="text-[0.6875rem] text-muted">+{dayLessons.length - 3}</div>}
               </div>
             </Link>
           );

@@ -89,7 +89,7 @@ async function Review({ params }: Pick<PageProps<Route>, "params">) {
 
   return (
     <>
-      <Link href={localePath(locale, `/homework/${review.homeworkId}`)} className="mb-3 inline-flex items-center gap-1 text-sm text-muted">
+      <Link href={localePath(locale, `/homework/${review.homeworkId}`)} className="mb-0 inline-flex min-h-11 items-center gap-1 text-sm text-muted sm:mb-3 sm:min-h-6">
         <ChevronLeft width={18} height={18} /> {review.title}
       </Link>
       <h1 className="text-2xl font-semibold tracking-tight">{review.studentName}</h1>

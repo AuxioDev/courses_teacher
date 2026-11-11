@@ -33,7 +33,7 @@ async function Group({ params }: Pick<PageProps<"/[lang]/groups/[id]">, "params"
 
   return (
     <>
-      <Link href={localePath(locale, "/groups")} className="mb-3 inline-flex items-center gap-1 text-sm text-muted">
+      <Link href={localePath(locale, "/groups")} className="mb-0 inline-flex min-h-11 items-center gap-1 text-sm text-muted sm:mb-3 sm:min-h-6">
         <ChevronLeft width={18} height={18} /> {t.nav.groups}
       </Link>
       <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
@@ -61,7 +61,7 @@ async function Group({ params }: Pick<PageProps<"/[lang]/groups/[id]">, "params"
         title={t.homeworkPage.title}
         action={
           !group.term.locked && (
-            <Link href={localePath(locale, `/groups/${group.id}/homework/new`)} className="text-sm font-medium text-accent">
+            <Link href={localePath(locale, `/groups/${group.id}/homework/new`)} className="inline-flex min-h-11 items-center sm:min-h-6 text-sm font-medium text-accent">
               {t.homeworkPage.give}
             </Link>
           )
