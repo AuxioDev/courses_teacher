@@ -34,9 +34,10 @@ vi.mock("@/i18n", () => ({ getRequestLocale: async () => "en" }));
 vi.mock("@/lib/notifications/notify", () => ({ notify: state.notify }));
 
 import { db } from "@/lib/db";
+import { dateToLocalInput } from "@/lib/homework-rules";
 import { createWorld, resetDatabase } from "../../../test/db";
 import * as actions from "../actions";
-const { addMarks, giveZero, reviewSubmission, saveAttendance, updateMark } = actions;
+const { addMarks, giveZero, reviewSubmission, saveAttendance, saveHomework, updateMark } = actions;
 
 const form = (fields: Record<string, string>) => {
   const f = new FormData();
@@ -169,6 +170,55 @@ describe("reviewSubmission", () => {
     const { attempt } = await handIn(w);
     await db.enrollment.updateMany({ where: { studentId: w.student.id }, data: { status: "dropped" } });
     expect(await reviewSubmission(undefined, form({ attemptId: attempt.id, decision: "grade", score: "20" }))).toEqual({ error: "studentLeft" });
+  });
+});
+
+describe("homework maximum and rounding", () => {
+  const editForm = (w: Awaited<ReturnType<typeof setup>>, maxScore: number) =>
+    form({
+      homeworkId: w.homework.id,
+      title: "HW 1",
+      description: "",
+      attachments: "",
+      dueAt: dateToLocalInput(w.homework.dueAt, "Asia/Baku"),
+      maxScore: String(maxScore),
+    });
+
+  it("stores a converted homework mark rounded to one decimal, like every other mark", async () => {
+    const w = await setup();
+    await db.homework.update({ where: { id: w.homework.id }, data: { maxScore: 3 } });
+    const { attempt } = await handIn(w);
+    await redirectsTo(reviewSubmission(undefined, form({ attemptId: attempt.id, decision: "grade", score: "2" })));
+    expect((await db.mark.findFirstOrThrow()).value).toBe(66.7);
+  });
+
+  it("lets the maximum change before any work is graded, then locks it", async () => {
+    const w = await setup();
+    await redirectsTo(saveHomework(undefined, editForm(w, 40)));
+    expect((await db.homework.findUniqueOrThrow({ where: { id: w.homework.id } })).maxScore).toBe(40);
+
+    const { attempt } = await handIn(w);
+    await redirectsTo(reviewSubmission(undefined, form({ attemptId: attempt.id, decision: "grade", score: "30" })));
+    expect(await saveHomework(undefined, editForm(w, 20))).toEqual({ error: "maxScoreLocked" });
+    expect((await db.homework.findUniqueOrThrow({ where: { id: w.homework.id } })).maxScore).toBe(40);
+    // Other fields may still change once work is graded, as long as the maximum stays.
+    await redirectsTo(saveHomework(undefined, editForm(w, 40)));
+  });
+
+  it("grading and changing the maximum at the same moment never leave a mark on the wrong scale", async () => {
+    for (let round = 0; round < 8; round++) {
+      await resetDatabase();
+      const w = await setup();
+      const { attempt } = await handIn(w);
+      await Promise.all([
+        redirectsTo(saveHomework(undefined, editForm(w, 40))),
+        redirectsTo(reviewSubmission(undefined, form({ attemptId: attempt.id, decision: "grade", score: "18" }))),
+      ]);
+      const homework = await db.homework.findUniqueOrThrow({ where: { id: w.homework.id } });
+      const mark = await db.mark.findFirst();
+      // Whoever won, the mark is the score converted with the maximum the homework ended with.
+      if (mark) expect(mark.value).toBe(Math.round((18 / homework.maxScore) * 1000) / 10);
+    }
   });
 });
 

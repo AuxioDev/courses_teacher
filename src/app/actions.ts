@@ -17,6 +17,7 @@ import { sendResetLink } from "@/lib/password-reset";
 import { attendanceAvailability } from "@/lib/lesson-rules";
 import { dateToLocalInput, localInputToDate } from "@/lib/homework-rules";
 import { notify } from "@/lib/notifications/notify";
+import { mapConcurrent, NOTIFY_CONCURRENCY } from "@/lib/concurrency";
 import { toHundredScale } from "@/lib/grading";
 import { getMarkWeights } from "@/lib/settings";
 import { getRequestLocale } from "@/i18n";
@@ -266,12 +267,11 @@ function notifyMarks(
   key: (mark: { id: string; value: number }) => string,
 ) {
   after(async () => {
-    for (const mark of marks) {
-      try {
-        await notify(mark.studentId, "new_mark", { course, markType: mark.type, value: mark.value }, { dedupeKey: key(mark) });
-      } catch (e) {
-        console.error(`[notify] new_mark failed: ${e instanceof Error ? e.name : "unknown"}`);
-      }
+    const outcomes = await mapConcurrent(marks, NOTIFY_CONCURRENCY, (mark) =>
+      notify(mark.studentId, "new_mark", { course, markType: mark.type, value: mark.value }, { dedupeKey: key(mark) }),
+    );
+    for (const o of outcomes) {
+      if (o.status === "rejected") console.error(`[notify] new_mark failed: ${o.reason instanceof Error ? o.reason.name : "unknown"}`);
     }
   });
 }
@@ -366,10 +366,12 @@ export async function updateMark(_prev: FormState, formData: FormData): Promise<
 const FEEDBACK = z.string().trim().max(5_000);
 
 class ReviewRefused extends Error {
-  constructor(readonly code: "attemptOutdated") {
+  constructor(readonly code: "attemptOutdated" | "scoreRange") {
     super(code);
   }
 }
+
+class MaxScoreLocked extends Error {}
 
 // Creates the student's mark for a homework, or moves it with a history entry.
 async function saveHomeworkMark(
@@ -491,11 +493,16 @@ export async function reviewSubmission(_prev: FormState, formData: FormData): Pr
   const raw = String(formData.get("score") ?? "").trim();
   const score = Number(raw);
   if (raw === "" || !Number.isInteger(score) || score < 0 || score > homework.maxScore) return { error: "scoreRange" };
-  const value = toHundredScale(score, homework.maxScore);
 
-  let mark: { id: string; changed: boolean };
+  let mark: { id: string; changed: boolean; value: number };
   try {
     mark = await db.$transaction(async (tx) => {
+      // Share-lock the homework row and read its maximum again: saveHomework takes the conflicting lock to change
+      // it, so the maximum cannot move between converting this score and committing the mark.
+      const [{ max_score: maxScore }] = await tx.$queryRaw<{ max_score: number }[]>`
+        SELECT max_score FROM homework WHERE id = ${homework.id} FOR SHARE`;
+      if (score > maxScore) throw new ReviewRefused("scoreRange");
+      const value = toHundredScale(score, maxScore);
       await assertLatest(tx);
       // A first grade or a change of grade. Returned work waits for the student.
       const claimed = await tx.submission.updateMany({
@@ -507,13 +514,13 @@ export async function reviewSubmission(_prev: FormState, formData: FormData): Pr
         where: { id: attemptId },
         data: { outcome: "graded", score, feedback, reviewedAt },
       });
-      return saveHomeworkMark(tx, {
+      return { ...(await saveHomeworkMark(tx, {
         studentId: submission.studentId,
         homeworkId: homework.id,
         groupId: homework.groupId,
         value,
         teacherId: teacher.id,
-      });
+      })), value };
     });
   } catch (e) {
     if (e instanceof ReviewRefused) return { error: e.code };
@@ -521,7 +528,7 @@ export async function reviewSubmission(_prev: FormState, formData: FormData): Pr
   }
   if (mark.changed) {
     notifyMarks(
-      [{ id: mark.id, studentId: submission.studentId, type: "homework", value }],
+      [{ id: mark.id, studentId: submission.studentId, type: "homework", value: mark.value }],
       course,
       (m) => `mark:${m.id}:${m.value}`,
     );
@@ -621,17 +628,16 @@ function notifyNewHomework(
   course: string,
 ) {
   after(async () => {
-    for (const studentId of studentIds) {
-      try {
-        await notify(
-          studentId,
-          "new_homework",
-          { homeworkId: homework.id, homeworkTitle: homework.title, course, dueAt: homework.dueAt.toISOString() },
-          { dedupeKey: `new_homework:${homework.id}` },
-        );
-      } catch (e) {
-        console.error(`[notify] new_homework failed: ${e instanceof Error ? e.name : "unknown"}`);
-      }
+    const outcomes = await mapConcurrent(studentIds, NOTIFY_CONCURRENCY, (studentId) =>
+      notify(
+        studentId,
+        "new_homework",
+        { homeworkId: homework.id, homeworkTitle: homework.title, course, dueAt: homework.dueAt.toISOString() },
+        { dedupeKey: `new_homework:${homework.id}` },
+      ),
+    );
+    for (const o of outcomes) {
+      if (o.status === "rejected") console.error(`[notify] new_homework failed: ${o.reason instanceof Error ? o.reason.name : "unknown"}`);
     }
   });
 }
@@ -670,10 +676,26 @@ export async function saveHomework(_prev: FormState, formData: FormData): Promis
     const dueChanged = dueInput !== dateToLocalInput(existing.dueAt, teacher.timezone);
     if (dueChanged && dueAt <= new Date()) return { error: "homeworkDue" };
 
-    await db.homework.update({
-      where: { id: homeworkId },
-      data: { ...fields, dueAt: dueChanged ? dueAt : existing.dueAt, maxScore: data.maxScore },
-    });
+    try {
+      await db.$transaction(async (tx) => {
+        // Lock the row, then look again: a grade that landed after the check above is now visible, and a grade
+        // that is still being written waits for this transaction (it share-locks the same row).
+        await tx.$queryRaw`SELECT id FROM homework WHERE id = ${homeworkId} FOR UPDATE`;
+        if (data.maxScore !== existing.maxScore) {
+          const gradedNow =
+            (await tx.mark.count({ where: { homeworkId } })) > 0 ||
+            (await tx.submission.count({ where: { homeworkId, status: "graded" } })) > 0;
+          if (gradedNow) throw new MaxScoreLocked();
+        }
+        await tx.homework.update({
+          where: { id: homeworkId },
+          data: { ...fields, dueAt: dueChanged ? dueAt : existing.dueAt, maxScore: data.maxScore },
+        });
+      });
+    } catch (e) {
+      if (e instanceof MaxScoreLocked) return { error: "maxScoreLocked" };
+      throw e;
+    }
     backPath = existing.lesson?.teacherId === teacher.id ? `/lessons/${existing.lesson.id}` : `/groups/${existing.groupId}`;
   } else {
     const group = await db.group.findFirst({
