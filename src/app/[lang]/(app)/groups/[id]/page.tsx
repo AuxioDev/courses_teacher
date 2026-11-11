@@ -82,7 +82,7 @@ async function Group({ params }: Pick<PageProps<"/[lang]/groups/[id]">, "params"
 function StudentTable({ students, t, locale }: { students: StudentProgress[]; t: Dictionary; locale: Locale }) {
   const header = "px-4 py-2 text-left text-xs font-semibold text-muted";
   return (
-    <div className="overflow-x-auto rounded-2xl border border-line bg-surface">
+    <div className="scroll-hint overflow-x-auto rounded-2xl border border-line bg-surface">
       <table className="w-full min-w-[36rem] text-sm">
         <thead>
           <tr className="border-b border-line">

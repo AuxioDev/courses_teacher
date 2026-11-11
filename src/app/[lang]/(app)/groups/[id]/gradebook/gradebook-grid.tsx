@@ -111,7 +111,7 @@ export function GradebookGrid({
         {state?.error && <span className="font-medium text-bad">{errors[state.error]}</span>}
         {state?.ok && <span className="font-medium text-good">{ok[state.ok]}</span>}
       </p>
-      <div className="max-h-[75dvh] overflow-auto rounded-2xl border border-line bg-surface">
+      <div className="scroll-hint max-h-[75dvh] overflow-auto rounded-2xl border border-line bg-surface">
         <table className="border-separate border-spacing-0 text-sm" data-group={groupId}>
           <thead>
             <tr className="align-bottom text-xs text-muted">
