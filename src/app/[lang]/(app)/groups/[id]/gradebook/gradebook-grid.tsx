@@ -94,8 +94,16 @@ export function GradebookGrid({
   ok: Dictionary["ok"];
 }) {
   const [state, setState] = useState<FormState>(undefined);
-  const stickyName = "sticky left-0 z-10 w-44 min-w-44 max-w-44 bg-surface";
-  const stickyAverage = "sticky left-44 z-10 w-20 min-w-20 border-r border-line bg-surface";
+  // The student and average columns stay in view while the marks scroll sideways, and the header row stays in view
+  // while the students scroll up and down. On a phone they are narrow (176px of 360) so several lessons fit.
+  const nameWidth = "w-28 min-w-28 max-w-28 sm:w-44 sm:min-w-44 sm:max-w-44";
+  const averageWidth = "w-16 min-w-16 sm:w-20 sm:min-w-20 border-r border-line";
+  const averageLeft = "left-28 sm:left-44";
+  const stickyName = `sticky left-0 z-10 bg-surface ${nameWidth}`;
+  const stickyAverage = `sticky ${averageLeft} z-10 bg-surface ${averageWidth}`;
+  const headName = `sticky left-0 top-0 z-30 bg-surface ${nameWidth}`;
+  const headAverage = `sticky ${averageLeft} top-0 z-30 bg-surface ${averageWidth}`;
+  const headCell = "sticky top-0 z-20 bg-surface";
 
   return (
     <>
@@ -103,18 +111,18 @@ export function GradebookGrid({
         {state?.error && <span className="font-medium text-bad">{errors[state.error]}</span>}
         {state?.ok && <span className="font-medium text-good">{ok[state.ok]}</span>}
       </p>
-      <div className="overflow-x-auto rounded-2xl border border-line bg-surface">
+      <div className="max-h-[75dvh] overflow-auto rounded-2xl border border-line bg-surface">
         <table className="border-separate border-spacing-0 text-sm" data-group={groupId}>
           <thead>
             <tr className="align-bottom text-xs text-muted">
-              <th scope="col" className={`${stickyName} border-b border-line px-3 py-2 text-left font-semibold`}>
+              <th scope="col" className={`${headName} border-b border-line px-3 py-2 text-left font-semibold`}>
                 {t.student}
               </th>
-              <th scope="col" className={`${stickyAverage} border-b border-line px-2 py-2 text-center font-semibold`}>
+              <th scope="col" className={`${headAverage} border-b border-line px-1 py-2 text-center font-semibold sm:px-2`}>
                 {t.average}
               </th>
               {showFinal && (
-                <th scope="col" className="border-b border-r border-line px-2 py-2 text-center font-semibold">
+                <th scope="col" className={`${headCell} border-b border-r border-line px-2 py-2 text-center font-semibold`}>
                   {t.final}
                 </th>
               )}
@@ -123,7 +131,7 @@ export function GradebookGrid({
                   key={column.key}
                   scope="col"
                   title={column.title ?? undefined}
-                  className="min-w-[4.75rem] border-b border-line px-1 py-2 text-center font-medium"
+                  className={`${headCell} min-w-[4.75rem] border-b border-line px-1 py-2 text-center font-medium`}
                 >
                   {column.href ? (
                     <Link href={localePath(locale, column.href)} className="block text-accent">
@@ -144,13 +152,13 @@ export function GradebookGrid({
             {rows.map((row) => (
               <tr key={row.id} className={row.enrolled ? "" : "text-muted"}>
                 <th scope="row" className={`${stickyName} border-b border-line px-3 py-1.5 text-left font-medium`}>
-                  <span className="block truncate" title={row.name}>
+                  <span className="block break-words leading-tight sm:truncate" title={row.name}>
                     {row.name}
                   </span>
                   {!row.enrolled && <span className="block text-[11px] font-normal">{t.left}</span>}
                 </th>
                 <td
-                  className={`${stickyAverage} border-b px-2 py-1.5 text-center font-mono font-semibold ${
+                  className={`${stickyAverage} border-b px-1 py-1.5 text-center font-mono font-semibold sm:px-2 ${
                     row.average === null ? "text-muted" : bandText[averageBand(row.average)]
                   }`}
                 >

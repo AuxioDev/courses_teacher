@@ -182,7 +182,7 @@ function MonthGrid({
                 {dayLessons.slice(0, 3).map((lesson) => (
                   <div
                     key={lesson.id}
-                    className={`truncate rounded px-0.5 font-mono text-[10px] leading-4 sm:px-1 sm:font-sans ${
+                    className={`truncate rounded px-0.5 font-mono text-[11px] leading-4 sm:px-1 sm:font-sans ${
                       lesson.status === "cancelled"
                         ? "bg-bad-soft text-bad line-through"
                         : lesson.status === "moved"
@@ -195,7 +195,7 @@ function MonthGrid({
                     <span className="hidden sm:inline"> {lesson.group.name}</span>
                   </div>
                 ))}
-                {dayLessons.length > 3 && <div className="text-[10px] text-muted">+{dayLessons.length - 3}</div>}
+                {dayLessons.length > 3 && <div className="text-[11px] text-muted">+{dayLessons.length - 3}</div>}
               </div>
             </Link>
           );
