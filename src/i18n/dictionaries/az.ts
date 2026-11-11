@@ -27,6 +27,7 @@ export const az: Dictionary = {
   errors: {
     missingCredentials: "E-poçt və şifrənizi daxil edin.",
     wrongCredentials: "E-poçt və ya şifrə yanlışdır.",
+    tempPasswordExpired: "Bu müvəqqəti şifrənin müddəti bitib. Məktəbdən yenisini istəyin.",
     notTeacher: "Bu tətbiq müəllimlər üçündür. Şagird və adminlərin öz tətbiqləri var.",
     badTimezone: "Naməlum saat qurşağı.",
     tooManyAttempts: "Çox sayda uğursuz cəhd. 15 dəqiqədən sonra yenidən cəhd edin.",

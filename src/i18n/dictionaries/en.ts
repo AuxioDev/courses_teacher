@@ -29,6 +29,7 @@ export const en = {
   errors: {
     missingCredentials: "Enter your email and password.",
     wrongCredentials: "Wrong email or password.",
+    tempPasswordExpired: "This temporary password has expired. Ask the school for a new one.",
     notTeacher: "This app is for teachers. Students and admins have their own apps.",
     badTimezone: "Unknown timezone.",
     tooManyAttempts: "Too many failed attempts. Try again in 15 minutes.",

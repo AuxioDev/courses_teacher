@@ -1,6 +1,6 @@
 // Creates a teacher account with a temporary password, until the Admin Panel exists.
 // Usage: npm run teacher:create -- "Leyla Mammadova" leyla@school.az
-import { db, hash, run, tempPassword } from "./admin-lib";
+import { db, hash, run, tempPassword, tempPasswordExpiry } from "./admin-lib";
 
 run(async () => {
   const [name, rawEmail] = process.argv.slice(2).map((s) => s.trim());
@@ -12,7 +12,7 @@ run(async () => {
 
   const password = tempPassword();
   await db.user.create({
-    data: { name, email, role: "teacher", passwordHash: await hash(password), mustChangePassword: true },
+    data: { name, email, role: "teacher", passwordHash: await hash(password), mustChangePassword: true, tempPasswordExpiresAt: tempPasswordExpiry() },
   });
   console.log(`Created ${name} <${email}>. Temporary password: ${password}`);
   console.log("They will be asked to choose their own password when they log in.");

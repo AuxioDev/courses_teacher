@@ -20,13 +20,7 @@ export const sha256 = (value: string) => createHash("sha256").update(value).dige
 export const randomToken = () => randomBytes(32).toString("base64url");
 export const hash = (password: string) => bcrypt.hash(password, 10);
 
-const WORDS = ["kite", "moss", "lamp", "reef", "fern", "dune", "mint", "opal", "pine", "wave", "jade", "bolt"];
-
-export function tempPassword() {
-  const pick = () => WORDS[randomBytes(1)[0] % WORDS.length];
-  const digits = String(randomBytes(2).readUInt16BE(0) % 10000).padStart(4, "0");
-  return `${pick()}-${digits}-${pick()}`;
-}
+export { tempPassword, tempPasswordExpiry } from "../src/lib/temp-password";
 
 export function run(main: () => Promise<void>) {
   main()
