@@ -56,7 +56,7 @@ async function EditHomework({ params }: Pick<PageProps<"/[lang]/homework/[id]/ed
       </Card>
       {canEdit && homework.deletable && (
         <div className="mt-4">
-          <DeleteHomeworkButton homeworkId={homework.id} labels={t.homeworkPage} errors={t.errors} />
+          <DeleteHomeworkButton homeworkId={homework.id} labels={t.homeworkPage} errors={t.errors} dialogLabels={t.dialog} />
         </div>
       )}
     </div>

@@ -218,6 +218,14 @@ export const az: Dictionary = {
       inDays: "{n} gün qalıb",
     },
   },
+  dialog: {
+    confirm: "Bəli, davam et",
+    cancel: "Ləğv et",
+  },
+  form: {
+    charsLeft: "{n} simvol qalıb",
+    charsOver: "{n} simvol artıqdır",
+  },
   password: {
     changeTitle: "Şifrəni dəyiş",
     forcedTitle: "Şifrənizi seçin",

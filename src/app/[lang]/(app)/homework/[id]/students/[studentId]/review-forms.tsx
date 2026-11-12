@@ -3,6 +3,7 @@
 import { startTransition, useActionState } from "react";
 import type { Dictionary } from "@/i18n/dictionaries/en";
 import { giveZero, reviewSubmission } from "@/app/actions";
+import { ConfirmForm } from "@/components/confirm-dialog";
 
 export function ReviewForm({
   attemptId,
@@ -79,20 +80,17 @@ export function GiveZeroForm({
   studentId,
   labels,
   errors,
+  dialogLabels,
 }: {
   homeworkId: string;
   studentId: string;
   labels: Dictionary["checking"];
   errors: Dictionary["errors"];
+  dialogLabels: Dictionary["dialog"];
 }) {
   const [state, action, pending] = useActionState(giveZero, undefined);
   return (
-    <form
-      action={action}
-      onSubmit={(event) => {
-        if (!window.confirm(labels.giveZeroConfirm)) event.preventDefault();
-      }}
-    >
+    <ConfirmForm action={action} message={labels.giveZeroConfirm} labels={dialogLabels}>
       <input type="hidden" name="homeworkId" value={homeworkId} />
       <input type="hidden" name="studentId" value={studentId} />
       <button type="submit" disabled={pending} className="btn-ghost text-bad">
@@ -104,6 +102,6 @@ export function GiveZeroForm({
           {errors[state.error]}
         </p>
       )}
-    </form>
+    </ConfirmForm>
   );
 }

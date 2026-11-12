@@ -218,6 +218,14 @@ export const ru: Dictionary = {
       inDays: "осталось {n} дн.",
     },
   },
+  dialog: {
+    confirm: "Да, продолжить",
+    cancel: "Отмена",
+  },
+  form: {
+    charsLeft: "Осталось символов: {n}",
+    charsOver: "Лишних символов: {n}",
+  },
   password: {
     changeTitle: "Сменить пароль",
     forcedTitle: "Придумайте пароль",

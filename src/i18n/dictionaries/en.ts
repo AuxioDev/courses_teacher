@@ -220,6 +220,14 @@ export const en = {
       inDays: "due in {n}d",
     },
   },
+  dialog: {
+    confirm: "Yes, continue",
+    cancel: "Cancel",
+  },
+  form: {
+    charsLeft: "{n} characters left",
+    charsOver: "{n} characters too many",
+  },
   password: {
     changeTitle: "Change password",
     forcedTitle: "Choose your password",

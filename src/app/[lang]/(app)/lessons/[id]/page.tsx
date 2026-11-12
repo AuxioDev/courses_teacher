@@ -169,6 +169,7 @@ async function Lesson({ params }: Pick<PageProps<"/[lang]/lessons/[id]">, "param
                 labels={t.lessonPage}
                 errors={t.errors}
                 ok={t.ok}
+                counter={t.form}
               />
             </Card>
           </Section>

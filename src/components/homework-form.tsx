@@ -3,6 +3,7 @@
 import { startTransition, useActionState } from "react";
 import type { Dictionary } from "@/i18n/dictionaries/en";
 import { deleteHomework, saveHomework } from "@/app/actions";
+import { ConfirmForm } from "@/components/confirm-dialog";
 
 type Values = { title: string; description: string; attachments: string; dueAt: string; maxScore: number };
 
@@ -105,19 +106,16 @@ export function DeleteHomeworkButton({
   homeworkId,
   labels,
   errors,
+  dialogLabels,
 }: {
   homeworkId: string;
   labels: Dictionary["homeworkPage"];
   errors: Dictionary["errors"];
+  dialogLabels: Dictionary["dialog"];
 }) {
   const [state, action, pending] = useActionState(deleteHomework, undefined);
   return (
-    <form
-      action={action}
-      onSubmit={(event) => {
-        if (!window.confirm(labels.deleteConfirm)) event.preventDefault();
-      }}
-    >
+    <ConfirmForm action={action} message={labels.deleteConfirm} labels={dialogLabels}>
       <input type="hidden" name="homeworkId" value={homeworkId} />
       <button type="submit" disabled={pending} className="btn-ghost text-bad">
         {labels.delete}
@@ -127,6 +125,6 @@ export function DeleteHomeworkButton({
           {errors[state.error]}
         </p>
       )}
-    </form>
+    </ConfirmForm>
   );
 }

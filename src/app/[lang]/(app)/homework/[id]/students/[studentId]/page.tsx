@@ -186,7 +186,7 @@ async function Review({ params }: Pick<PageProps<Route>, "params">) {
           {canGiveZero && (
             <Section title={t.checking.decision}>
               <Card>
-                <GiveZeroForm homeworkId={review.homeworkId} studentId={studentId} labels={t.checking} errors={t.errors} />
+                <GiveZeroForm homeworkId={review.homeworkId} studentId={studentId} labels={t.checking} errors={t.errors} dialogLabels={t.dialog} />
               </Card>
             </Section>
           )}
