@@ -15,6 +15,7 @@ export const az: Dictionary = {
     next: "Növbəti",
     term: "Semestr",
     current: "cari",
+    loading: "Yüklənir…",
   },
   login: {
     title: "Daxil ol",
@@ -291,6 +292,7 @@ export const az: Dictionary = {
     security: "Təhlükəsizlik",
     logoutEverywhere: "Bütün cihazlardan çıxış et",
     logoutEverywhereHint: "Başqasının telefonunda və ya kompüterində daxil olmusunuzsa, bundan istifadə edin.",
+    timezoneSearch: "Saat qurşağı axtar…",
   },
   notFound: {
     title: "Tapılmadı",

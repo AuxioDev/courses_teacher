@@ -17,7 +17,7 @@ export function TermSwitcher({
 }) {
   if (terms.length < 2) return null;
   return (
-    <nav aria-label={label} className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0">
+    <nav aria-label={label} className="scroll-hint -mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1 [--scroll-cover:var(--bg)] sm:mx-0 sm:px-0">
       {terms.map((term) => {
         const active = term.id === selected;
         return (

@@ -15,6 +15,7 @@ export const ru: Dictionary = {
     next: "Вперёд",
     term: "Семестр",
     current: "текущий",
+    loading: "Загрузка…",
   },
   login: {
     title: "Вход",
@@ -291,6 +292,7 @@ export const ru: Dictionary = {
     security: "Безопасность",
     logoutEverywhere: "Выйти на всех устройствах",
     logoutEverywhereHint: "Используйте, если входили с чужого телефона или компьютера.",
+    timezoneSearch: "Найти часовой пояс…",
   },
   notFound: {
     title: "Не найдено",

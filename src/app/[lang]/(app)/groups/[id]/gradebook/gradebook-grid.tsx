@@ -63,7 +63,7 @@ function EditableCell({
       disabled={pending}
       aria-label={label}
       title={cell.comment ?? undefined}
-      className="min-h-9 w-full rounded-md px-2 font-mono text-sm hover:bg-surface-2 disabled:opacity-50"
+      className="min-h-11 w-full rounded-md sm:min-h-9 px-2 font-mono text-sm hover:bg-surface-2 disabled:opacity-50"
     >
       {formatScore(cell.value)}
     </button>

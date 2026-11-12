@@ -17,6 +17,7 @@ export const en = {
     next: "Next",
     term: "Term",
     current: "current",
+    loading: "Loading…",
   },
   login: {
     title: "Log in",
@@ -293,6 +294,7 @@ export const en = {
     security: "Security",
     logoutEverywhere: "Log out on all devices",
     logoutEverywhereHint: "Use this if you logged in on someone else's phone or computer.",
+    timezoneSearch: "Search timezones…",
   },
   notFound: {
     title: "Not found",

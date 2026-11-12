@@ -40,7 +40,7 @@ function Bar({ locale, labels, pathname }: ViewProps) {
   return (
     <nav
       aria-label={labels.main}
-      className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-surface/95 backdrop-blur md:hidden"
+      className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
     >
       <ul className="flex">
         {items.map(({ path, key, Icon }) => {
