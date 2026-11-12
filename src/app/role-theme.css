@@ -49,7 +49,7 @@ main h1::after {
   margin-top: 0.4rem;
   border-block: 1px solid var(--accent);
   transform-origin: left;
-  animation: rule-draw 0.6s 0.05s var(--ease-out) both;
+  animation: rule-draw var(--dur-slow) 0.05s var(--ease-out) both;
 }
 main h2 {
   font-weight: 650;
@@ -64,7 +64,7 @@ body .font-mono {
 
 /* The gradebook: striped rows, a highlight under the pen. */
 main tbody tr {
-  transition: background-color 0.15s;
+  transition: background-color var(--dur-fast);
 }
 main tbody tr:nth-child(even) {
   background: color-mix(in srgb, var(--surface-2) 45%, transparent);
@@ -75,7 +75,7 @@ main tbody tr:hover {
 
 /* The first rows are written in one after another when a table loads: 14 rows, done in about 0.55 s. */
 main tbody > tr:nth-child(-n + 14) {
-  animation: row-wipe 0.3s var(--ease-out) both;
+  animation: row-wipe var(--dur-base) var(--ease-out) both;
 }
 main tbody > tr:nth-child(2) { animation-delay: 20ms; }
 main tbody > tr:nth-child(3) { animation-delay: 40ms; }
@@ -110,7 +110,7 @@ main tbody > tr:nth-child(14) { animation-delay: 260ms; }
 
 /* Choosing an attendance status: the chosen cell pops, like a circle drawn with the pen. */
 input[type="radio"]:checked + span {
-  animation: choice-pop 0.28s var(--ease-spring) both;
+  animation: choice-pop var(--dur-base) var(--ease-spring) both;
 }
 
 @keyframes choice-pop {

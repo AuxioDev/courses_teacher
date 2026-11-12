@@ -3,6 +3,7 @@ import { getI18n } from "@/i18n";
 import { localePath } from "@/i18n/config";
 import { AppNav } from "@/components/app-nav";
 import { LanguageMenu } from "@/components/language-menu";
+import { PageTransition } from "@/components/page-transition";
 
 // Tablets and desktops get the side navigation; phones get a bar at the bottom.
 export default async function AppLayout({ children }: LayoutProps<"/[lang]">) {
@@ -17,7 +18,9 @@ export default async function AppLayout({ children }: LayoutProps<"/[lang]">) {
           <LanguageMenu locale={locale} label={t.profile.language} saveToAccount />
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-4 pt-5 sm:px-6 md:pt-8">{children}</main>
+      <main className="mx-auto max-w-6xl px-4 pt-5 sm:px-6 md:pt-8">
+        <PageTransition>{children}</PageTransition>
+      </main>
       <AppNav locale={locale} labels={{ ...t.nav, appName: t.meta.appName }} />
     </div>
   );
