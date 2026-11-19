@@ -96,6 +96,7 @@ export const ru: Dictionary = {
     attendance: "Посещаемость",
     markAllPresent: "Отметить всех присутствующими",
     notMarked: { one: "Не отмечен {n} ученик", few: "Не отмечены {n} ученика", many: "Не отмечены {n} учеников", other: "Не отмечены {n} ученика" },
+    notMarkedChip: "Не отмечен",
     saveAttendance: "Сохранить посещаемость",
     saving: "Сохранение…",
     unsaved: "Есть несохранённые изменения",

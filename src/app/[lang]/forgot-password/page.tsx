@@ -16,7 +16,7 @@ export default async function ForgotPasswordPage() {
       <h1 className="text-2xl font-semibold tracking-tight">{t.forgot.title}</h1>
       <p className="mb-6 mt-1 text-sm text-muted">{t.forgot.subtitle}</p>
       <ForgotForm labels={{ ...t.forgot, email: t.login.email }} errors={t.errors} ok={t.ok} />
-      <Link href={localePath(locale, "/login")} className="mt-6 text-center text-sm text-accent">
+      <Link href={localePath(locale, "/login")} className="mt-6 text-center text-sm text-accent underline-offset-2 hover:underline">
         {t.forgot.back}
       </Link>
     </main>

@@ -15,7 +15,7 @@ export default async function PrivacyPage() {
     <main className="mx-auto max-w-xl px-6 py-10">
       <h1 className="mb-4 text-2xl font-semibold tracking-tight">{t.privacy.title}</h1>
       <PrivacyNotice t={t.privacy} />
-      <Link href={localePath(locale, "/")} className="mt-8 inline-block text-sm text-accent">
+      <Link href={localePath(locale, "/")} className="mt-8 inline-block text-sm text-accent underline-offset-2 hover:underline">
         {t.notFound.back}
       </Link>
     </main>

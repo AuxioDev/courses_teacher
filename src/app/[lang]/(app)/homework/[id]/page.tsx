@@ -8,6 +8,7 @@ import { fmt, getI18n } from "@/i18n";
 import { localePath } from "@/i18n/config";
 import { formatScore } from "@/lib/format-score";
 import { Badge, Card, Section, type Tone } from "@/components/ui";
+import { Notice } from "@/components/notice";
 import { ChevronLeft, ChevronRight } from "@/components/icons";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -43,7 +44,7 @@ async function Checking({ params }: Pick<PageProps<"/[lang]/homework/[id]">, "pa
         <Link
           key={row.id}
           href={localePath(locale, `/homework/${homework.id}/students/${row.id}`)}
-          className="flex items-center justify-between gap-3 px-4 py-3"
+          className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-surface-2"
         >
           <span className="min-w-0">
             <span className="block truncate font-medium">{row.name}</span>
@@ -67,7 +68,7 @@ async function Checking({ params }: Pick<PageProps<"/[lang]/homework/[id]">, "pa
 
   return (
     <div className="max-w-3xl">
-      <Link href={localePath(locale, "/homework")} className="mb-0 inline-flex min-h-11 items-center gap-1 text-sm text-muted sm:mb-3 sm:min-h-6">
+      <Link href={localePath(locale, "/homework")} className="mb-0 inline-flex min-h-11 items-center gap-1 text-sm text-muted hover:text-ink sm:mb-3 sm:min-h-6">
         <ChevronLeft width={18} height={18} /> {t.nav.homework}
       </Link>
       <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
@@ -83,7 +84,7 @@ async function Checking({ params }: Pick<PageProps<"/[lang]/homework/[id]">, "pa
           {t.homeworkPage.editTitle}
         </Link>
       </div>
-      {homework.group.term.locked && <p className="mb-4 rounded-xl bg-surface-2 px-3 py-2 text-sm">{t.homeworkPage.termLocked}</p>}
+      {homework.group.term.locked && <Notice>{t.homeworkPage.termLocked}</Notice>}
       <Section title={t.groups.studentsTitle}>{list(homework.students)}</Section>
       {homework.left.length > 0 && <Section title={t.groups.left}>{list(homework.left)}</Section>}
     </div>

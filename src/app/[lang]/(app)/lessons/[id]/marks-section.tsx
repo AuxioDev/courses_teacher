@@ -72,7 +72,7 @@ export function NewMarksForm({
       <h3 className="mb-3 text-sm font-semibold">{labels.add}</h3>
       <div className="mb-3 grid grid-cols-2 gap-3 sm:max-w-sm">
         <label className="block">
-          <span className="mb-1 block text-xs font-medium text-muted">{labels.type}</span>
+          <span className="mb-1 block text-sm font-medium">{labels.type}</span>
           <select
             name="type"
             value={type}
@@ -91,7 +91,7 @@ export function NewMarksForm({
           </select>
         </label>
         <label className="block">
-          <span className="mb-1 block text-xs font-medium text-muted">{labels.weight}</span>
+          <span className="mb-1 block text-sm font-medium">{labels.weight}</span>
           <input
             name="weight"
             type="number"
@@ -121,7 +121,7 @@ export function NewMarksForm({
               placeholder="0–100"
               value={values[student.id] ?? ""}
               onChange={(event) => setValues((v) => ({ ...v, [student.id]: event.target.value }))}
-              className="field font-mono"
+              className="field field-compact font-mono"
             />
             <input
               name={`comment:${student.id}`}
@@ -130,7 +130,7 @@ export function NewMarksForm({
               placeholder={labels.comment}
               value={comments[student.id] ?? ""}
               onChange={(event) => setComments((c) => ({ ...c, [student.id]: event.target.value }))}
-              className="field col-span-2 sm:col-span-1"
+              className="field field-compact col-span-2 sm:col-span-1"
             />
           </li>
         ))}
@@ -213,7 +213,7 @@ export function MarkRow({
           aria-label={`${labels.value}: ${mark.studentName}`}
           value={value}
           onChange={(event) => setValue(event.target.value)}
-          className="field font-mono"
+          className="field field-compact font-mono"
         />
         <input
           name="comment"
@@ -222,7 +222,7 @@ export function MarkRow({
           placeholder={labels.comment}
           value={comment}
           onChange={(event) => setComment(event.target.value)}
-          className="field col-span-2 sm:col-span-1"
+          className="field field-compact col-span-2 sm:col-span-1"
         />
       </div>
       {(dirty || state) && (

@@ -5,6 +5,7 @@ import { getGradebook } from "@/lib/data";
 import { getI18n } from "@/i18n";
 import { localePath } from "@/i18n/config";
 import { Empty } from "@/components/ui";
+import { Notice } from "@/components/notice";
 import { ChevronLeft } from "@/components/icons";
 import { GradebookGrid } from "./gradebook-grid";
 
@@ -27,7 +28,7 @@ async function Gradebook({ params }: Pick<PageProps<"/[lang]/groups/[id]/gradebo
 
   return (
     <>
-      <Link href={localePath(locale, `/groups/${gradebook.id}`)} className="mb-0 inline-flex min-h-11 items-center gap-1 text-sm text-muted sm:mb-3 sm:min-h-6">
+      <Link href={localePath(locale, `/groups/${gradebook.id}`)} className="mb-0 inline-flex min-h-11 items-center gap-1 text-sm text-muted hover:text-ink sm:mb-3 sm:min-h-6">
         <ChevronLeft width={18} height={18} /> {gradebook.name}
       </Link>
       <div className="flex items-start justify-between gap-3">
@@ -38,10 +39,10 @@ async function Gradebook({ params }: Pick<PageProps<"/[lang]/groups/[id]/gradebo
           </a>
         )}
       </div>
-      <p className="mb-4 mt-0.5 text-sm text-muted">
+      <p className="mb-5 mt-0.5 text-sm text-muted">
         {gradebook.course} · {gradebook.name} · {gradebook.termName}
       </p>
-      {gradebook.termLocked && <p className="mb-4 rounded-xl bg-surface-2 px-3 py-2 text-sm">{t.gradebook.termLocked}</p>}
+      {gradebook.termLocked && <Notice>{t.gradebook.termLocked}</Notice>}
       {gradebook.columns.length === 0 ? (
         <Empty>{t.gradebook.none}</Empty>
       ) : (

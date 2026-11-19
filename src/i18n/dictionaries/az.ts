@@ -96,6 +96,7 @@ export const az: Dictionary = {
     attendance: "Davamiyyət",
     markAllPresent: "Hamısını iştirakçı qeyd et",
     notMarked: { one: "{n} şagird qeyd olunmayıb", other: "{n} şagird qeyd olunmayıb" },
+    notMarkedChip: "Qeyd olunmayıb",
     saveAttendance: "Davamiyyəti saxla",
     saving: "Saxlanılır…",
     unsaved: "Yadda saxlanmamış dəyişikliklər",

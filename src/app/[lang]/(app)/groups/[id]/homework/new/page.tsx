@@ -8,6 +8,7 @@ import { getI18n } from "@/i18n";
 import { localePath } from "@/i18n/config";
 import { HomeworkForm } from "@/components/homework-form";
 import { Card } from "@/components/ui";
+import { Notice } from "@/components/notice";
 import { ChevronLeft } from "@/components/icons";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -31,7 +32,7 @@ async function NewHomework({ params, searchParams }: PageProps<"/[lang]/groups/[
 
   return (
     <div className="max-w-2xl">
-      <Link href={localePath(locale, back)} className="mb-0 inline-flex min-h-11 items-center gap-1 text-sm text-muted sm:mb-3 sm:min-h-6">
+      <Link href={localePath(locale, back)} className="mb-0 inline-flex min-h-11 items-center gap-1 text-sm text-muted hover:text-ink sm:mb-3 sm:min-h-6">
         <ChevronLeft width={18} height={18} /> {group.name}
       </Link>
       <h1 className="text-2xl font-semibold tracking-tight">{t.homeworkPage.give}</h1>
@@ -39,7 +40,7 @@ async function NewHomework({ params, searchParams }: PageProps<"/[lang]/groups/[
         {group.course.title} · {group.name}
         {group.lesson?.topic && ` · ${group.lesson.topic}`}
       </p>
-      {group.term.locked && <p className="mb-4 rounded-xl bg-surface-2 px-3 py-2 text-sm">{t.homeworkPage.termLocked}</p>}
+      {group.term.locked && <Notice>{t.homeworkPage.termLocked}</Notice>}
       <Card>
         <HomeworkForm
           target={{ groupId: group.id, lessonId: group.lesson?.id ?? null }}

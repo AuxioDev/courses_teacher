@@ -62,3 +62,26 @@ export const TrashIcon = (p: IconProps) => (
 export const UsersIcon = (p: IconProps) => (
   <svg {...base(p)}><circle cx="9" cy="8" r="3.5" /><path d="M2.5 20a6.5 6.5 0 0 1 13 0M16 4.8a3.5 3.5 0 0 1 0 6.4M18 14.5a6.5 6.5 0 0 1 3.5 5.5" /></svg>
 );
+// Status marks. Each one means the same thing everywhere (badges, attendance, homework states), and they are drawn the
+// same way as the CSS masks in role-theme.css, so a badge made by the shared <Badge> and one made here look alike.
+export const InfoIcon = (p: IconProps) => (
+  <svg {...base(p)}><circle cx="12" cy="12" r="9" /><path d="M12 11v5M12 8v.01" /></svg>
+);
+export const CrossIcon = (p: IconProps) => (
+  <svg {...base(p)}><path d="M6 6l12 12M18 6 6 18" /></svg>
+);
+export const AlertIcon = (p: IconProps) => (
+  <svg {...base(p)}><path d="M12 5v9M12 19v.01" /></svg>
+);
+export const DotIcon = (p: IconProps) => (
+  <svg {...base(p)}><circle cx="12" cy="12" r="5" fill="currentColor" stroke="none" /></svg>
+);
+export const CircleIcon = (p: IconProps) => (
+  <svg {...base(p)}><circle cx="12" cy="12" r="6.5" /></svg>
+);
+export const FileIcon = (p: IconProps) => (
+  <svg {...base(p)}><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4" /></svg>
+);
+export const ExternalLinkIcon = (p: IconProps) => (
+  <svg {...base(p)}><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5" /></svg>
+);

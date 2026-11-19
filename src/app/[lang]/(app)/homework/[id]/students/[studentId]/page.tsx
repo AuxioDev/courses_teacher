@@ -10,7 +10,8 @@ import { fmt, getI18n } from "@/i18n";
 import { localePath } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries/en";
 import { Badge, Card, Empty, Section, type Tone } from "@/components/ui";
-import { ChevronLeft } from "@/components/icons";
+import { Notice } from "@/components/notice";
+import { ChevronLeft, ExternalLinkIcon, FileIcon } from "@/components/icons";
 import { GiveZeroForm, ReviewForm } from "./review-forms";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -39,7 +40,7 @@ function Attempt({ attempt, t }: { attempt: ReviewAttempt; t: Dictionary["checki
       {attempt.content && (
         <div>
           <p className="mb-0.5 text-xs font-semibold text-muted">{t.answer}</p>
-          <p className="whitespace-pre-wrap break-words">{attempt.content}</p>
+          <p className="max-w-[70ch] whitespace-pre-wrap break-words text-[0.9375rem] leading-relaxed">{attempt.content}</p>
         </div>
       )}
       {attempt.files.length > 0 && (
@@ -47,8 +48,14 @@ function Attempt({ attempt, t }: { attempt: ReviewAttempt; t: Dictionary["checki
           <p className="mb-0.5 text-xs font-semibold text-muted">{t.files}</p>
           <ul className="space-y-1">
             {attempt.files.map((file) => (
-              <li key={file.id} className="flex items-baseline gap-2">
-                <a href={`/api/files/${file.id}`} target="_blank" rel="noreferrer" className="truncate py-1 text-accent">
+              <li key={file.id} className="flex items-center gap-2.5 rounded-lg border border-line bg-surface-2 px-3 py-2">
+                <FileIcon width={16} height={16} className="shrink-0 text-muted" />
+                <a
+                  href={`/api/files/${file.id}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="min-w-0 flex-1 text-accent underline-offset-2 hover:underline"
+                >
                   {file.name}
                 </a>
                 <span className="shrink-0 text-xs text-muted">{formatBytes(file.size)}</span>
@@ -62,8 +69,9 @@ function Attempt({ attempt, t }: { attempt: ReviewAttempt; t: Dictionary["checki
           <p className="mb-0.5 text-xs font-semibold text-muted">{t.links}</p>
           <ul className="space-y-1">
             {attempt.links.map((url) => (
-              <li key={url}>
-                <a href={url} target="_blank" rel="noreferrer" className="break-all text-accent">
+              <li key={url} className="flex items-start gap-2">
+                <ExternalLinkIcon width={14} height={14} className="mt-1 shrink-0 text-muted" />
+                <a href={url} target="_blank" rel="noreferrer" className="break-all text-accent underline-offset-2 hover:underline">
                   {url}
                 </a>
               </li>
@@ -89,14 +97,14 @@ async function Review({ params }: Pick<PageProps<Route>, "params">) {
 
   return (
     <>
-      <Link href={localePath(locale, `/homework/${review.homeworkId}`)} className="mb-0 inline-flex min-h-11 items-center gap-1 text-sm text-muted sm:mb-3 sm:min-h-6">
+      <Link href={localePath(locale, `/homework/${review.homeworkId}`)} className="mb-0 inline-flex min-h-11 items-center gap-1 text-sm text-muted hover:text-ink sm:mb-3 sm:min-h-6">
         <ChevronLeft width={18} height={18} /> {review.title}
       </Link>
       <h1 className="text-2xl font-semibold tracking-tight">{review.studentName}</h1>
       <p className="mb-5 mt-0.5 text-sm text-muted">
         {review.course} · {review.groupName} · {fmt(t.dashboard.due, { date: formatDateTime(review.dueAt, tz, locale) })}
       </p>
-      {review.termLocked && <p className="mb-4 rounded-xl bg-surface-2 px-3 py-2 text-sm">{t.homeworkPage.termLocked}</p>}
+      {review.termLocked && <Notice>{t.homeworkPage.termLocked}</Notice>}
 
       <div className="lg:grid lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start lg:gap-8">
         <div>
@@ -140,7 +148,7 @@ async function Review({ params }: Pick<PageProps<Route>, "params">) {
                     </summary>
                     <div className="space-y-3 border-t border-line p-4">
                       {attempt.feedback && (
-                        <div className="rounded-xl bg-warn-soft/50 p-3 text-sm">
+                        <div className="feedback-note p-3 text-sm">
                           <p className="mb-1 text-xs font-semibold text-muted">{t.checking.feedback}</p>
                           <p className="whitespace-pre-wrap break-words">{attempt.feedback}</p>
                         </div>
@@ -154,7 +162,9 @@ async function Review({ params }: Pick<PageProps<Route>, "params">) {
           )}
         </div>
 
-        <div>
+        {/* From 1024px the decision column stays in view while a long answer scrolls, and scrolls by itself if it is taller
+            than the screen. The small negative margin and padding leave room for the fields' focus halos inside the clip. */}
+        <div className="lg:sticky lg:top-[4.5rem] lg:-mx-1 lg:max-h-[calc(100dvh-5.5rem)] lg:overflow-y-auto lg:px-1 lg:pb-1">
           {latest && (
             <Section title={status === "graded" ? t.checking.state.graded : status === "returned" ? t.checking.state.returned : t.checking.decision}>
               <Card>

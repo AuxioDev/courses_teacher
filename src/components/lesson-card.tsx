@@ -18,24 +18,26 @@ export async function LessonCard({ lesson, timeZone, now }: { lesson: LessonItem
     now < lesson.endsAt;
 
   return (
-    <div className={`relative flex gap-3 rounded-2xl border border-line bg-surface p-4 ${cancelled ? "opacity-60" : ""}`}>
+    // A lesson that is on now (or about to start) is marked with the secondary colour; a cancelled one is struck through
+    // and softened, but its badge stays at full strength so the reason is still plain.
+    <div className={`relative flex gap-3 rounded-2xl border border-line bg-surface p-4 ${live ? "lesson-live" : ""}`}>
       <div className="w-12 shrink-0 text-right font-mono text-sm leading-tight">
-        <div className={cancelled ? "line-through" : "font-semibold"}>{formatTime(lesson.startsAt, timeZone)}</div>
+        <div className={cancelled ? "text-muted line-through" : "font-semibold"}>{formatTime(lesson.startsAt, timeZone)}</div>
         <div className="text-muted">{formatTime(lesson.endsAt, timeZone)}</div>
       </div>
-      <div className={`min-w-0 flex-1 border-l-2 pl-3 ${cancelled ? "border-line" : "border-accent"}`}>
+      <div className={`min-w-0 flex-1 border-l-2 pl-3 ${cancelled ? "border-line" : live ? "border-live" : "border-accent"}`}>
         <div className="flex flex-wrap items-center gap-1.5">
           {/* The link stretches over the whole card; the Join button sits above it. */}
-          <Link href={localePath(locale, `/lessons/${lesson.id}`)} className="font-semibold after:absolute after:inset-0 after:rounded-2xl">
+          <Link href={localePath(locale, `/lessons/${lesson.id}`)} className={`font-semibold after:absolute after:inset-0 after:rounded-2xl ${cancelled ? "text-muted" : ""}`}>
             {lesson.group.course.title}
           </Link>
           {lesson.status === "moved" && <Badge tone="warn">{t.lesson.status.moved}</Badge>}
           {cancelled && <Badge tone="bad">{t.lesson.status.cancelled}</Badge>}
         </div>
         <p className="mt-0.5 text-xs text-muted">{lesson.group.name}</p>
-        {lesson.topic && <p className="mt-0.5 text-sm">{lesson.topic}</p>}
+        {lesson.topic && <p className={`mt-0.5 text-sm ${cancelled ? "text-muted" : ""}`}>{lesson.topic}</p>}
         {live && (
-          <a href={lesson.meetingUrl!} target="_blank" rel="noreferrer" className="btn relative z-10 mt-3">
+          <a href={lesson.meetingUrl!} target="_blank" rel="noreferrer" className="btn btn-join relative z-10 mt-3">
             <VideoIcon width={18} height={18} /> {t.lesson.join}
           </a>
         )}

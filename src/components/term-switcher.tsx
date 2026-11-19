@@ -26,7 +26,7 @@ export function TermSwitcher({
             href={hrefFor(term)}
             aria-current={active ? "page" : undefined}
             className={`shrink-0 rounded-full border px-3 py-1.5 text-sm font-medium ${
-              active ? "border-accent bg-accent text-accent-ink" : "border-line bg-surface text-ink"
+              active ? "border-accent bg-accent text-accent-ink" : "border-line bg-surface text-ink hover:bg-surface-2"
             }`}
           >
             {term.name}

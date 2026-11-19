@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getCurrentTeacher } from "@/lib/auth";
 import { getGroup, type StudentProgress } from "@/lib/data";
-import { averageBand, formatAverage } from "@/lib/grading";
+import { averageBand } from "@/lib/grading";
+import { AverageValue } from "@/components/average-value";
 import { fmt, getI18n, plural } from "@/i18n";
 import { localePath, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries/en";
@@ -33,7 +34,7 @@ async function Group({ params }: Pick<PageProps<"/[lang]/groups/[id]">, "params"
 
   return (
     <>
-      <Link href={localePath(locale, "/groups")} className="mb-0 inline-flex min-h-11 items-center gap-1 text-sm text-muted sm:mb-3 sm:min-h-6">
+      <Link href={localePath(locale, "/groups")} className="mb-0 inline-flex min-h-11 items-center gap-1 text-sm text-muted hover:text-ink sm:mb-3 sm:min-h-6">
         <ChevronLeft width={18} height={18} /> {t.nav.groups}
       </Link>
       <div className="mb-5 flex flex-wrap items-start justify-between gap-3">
@@ -61,13 +62,13 @@ async function Group({ params }: Pick<PageProps<"/[lang]/groups/[id]">, "params"
         title={t.homeworkPage.title}
         action={
           !group.term.locked && (
-            <Link href={localePath(locale, `/groups/${group.id}/homework/new`)} className="inline-flex min-h-11 items-center sm:min-h-6 text-sm font-medium text-accent">
+            <Link href={localePath(locale, `/groups/${group.id}/homework/new`)} className="inline-flex min-h-11 items-center text-sm font-semibold text-accent underline-offset-2 hover:underline sm:min-h-6">
               {t.homeworkPage.give}
             </Link>
           )
         }
       >
-        <HomeworkList items={group.homework} timeZone={teacher.timezone} locale={locale} t={t} />
+        <HomeworkList items={group.homework} now={new Date()} timeZone={teacher.timezone} locale={locale} t={t} />
       </Section>
 
       {group.left.length > 0 && (
@@ -86,7 +87,7 @@ function StudentTable({ students, t, locale }: { students: StudentProgress[]; t:
       <table className="w-full min-w-[36rem] text-sm">
         <thead>
           <tr className="border-b border-line">
-            <th scope="col" className={header}>{t.groups.student}</th>
+            <th scope="col" className={`${header} frozen-edge sticky left-0 z-10 min-w-36`}>{t.groups.student}</th>
             <th scope="col" className={header}>{t.groups.attendance}</th>
             <th scope="col" className={header}>{t.groups.average}</th>
             <th scope="col" className={header}>{t.groups.homework}</th>
@@ -96,10 +97,10 @@ function StudentTable({ students, t, locale }: { students: StudentProgress[]; t:
         <tbody className="divide-y divide-line">
           {students.map((student) => (
             <tr key={student.id}>
-              <th scope="row" className="px-4 py-3 text-left font-medium">{student.name}</th>
+              <th scope="row" className="frozen-edge sticky left-0 z-10 min-w-36 bg-surface px-4 py-3 text-left font-medium">{student.name}</th>
               <td className="px-4 py-3 font-mono">{formatRate(student.attendanceRate)}</td>
               <td className={`px-4 py-3 font-mono font-semibold ${student.average === null ? "text-muted" : bandText[averageBand(student.average)]}`}>
-                {student.average === null ? "—" : formatAverage(student.average)}
+                <AverageValue average={student.average} />
               </td>
               <td className="px-4 py-3 font-mono">
                 {student.assigned === 0 ? "—" : fmt(t.groups.handedIn, { done: student.handedIn, total: student.assigned })}

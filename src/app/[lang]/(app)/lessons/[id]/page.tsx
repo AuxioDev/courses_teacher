@@ -9,6 +9,7 @@ import { fmt, getI18n } from "@/i18n";
 import { localePath } from "@/i18n/config";
 import { HomeworkList } from "@/components/homework-list";
 import { Badge, Card, Empty, Section, type Tone } from "@/components/ui";
+import { Notice } from "@/components/notice";
 import { ChevronLeft, VideoIcon } from "@/components/icons";
 import type { AttendanceStatus } from "@/generated/prisma/enums";
 import { AttendanceRoster } from "./attendance-roster";
@@ -57,7 +58,7 @@ async function Lesson({ params }: Pick<PageProps<"/[lang]/lessons/[id]">, "param
 
   return (
     <>
-      <Link href={localePath(locale, `/lessons?view=week&date=${day}`)} className="mb-0 inline-flex min-h-11 items-center gap-1 text-sm text-muted sm:mb-3 sm:min-h-6">
+      <Link href={localePath(locale, `/lessons?view=week&date=${day}`)} className="mb-0 inline-flex min-h-11 items-center gap-1 text-sm text-muted hover:text-ink sm:mb-3 sm:min-h-6">
         <ChevronLeft width={18} height={18} /> {t.nav.lessons}
       </Link>
 
@@ -89,7 +90,11 @@ async function Lesson({ params }: Pick<PageProps<"/[lang]/lessons/[id]">, "param
         )}
       </div>
 
-      {notice && <p className="mb-4 rounded-xl bg-surface-2 px-3 py-2 text-sm">{notice}</p>}
+      {notice && (
+        <Notice tone={lesson.availability === "cancelled" ? "warn" : lesson.availability === "tooEarly" ? "info" : "neutral"}>
+          {notice}
+        </Notice>
+      )}
 
       <div className="lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:items-start lg:gap-8">
         <div>
@@ -180,14 +185,14 @@ async function Lesson({ params }: Pick<PageProps<"/[lang]/lessons/[id]">, "param
                 canEditDetails && (
                   <Link
                     href={localePath(locale, `/groups/${lesson.group.id}/homework/new?lesson=${lesson.id}`)}
-                    className="text-sm font-medium text-accent"
+                    className="inline-flex min-h-11 items-center text-sm font-semibold text-accent underline-offset-2 hover:underline sm:min-h-6"
                   >
                     {t.homeworkPage.give}
                   </Link>
                 )
               }
             >
-              <HomeworkList items={lesson.homework} timeZone={tz} locale={locale} t={t} />
+              <HomeworkList items={lesson.homework} now={now} timeZone={tz} locale={locale} t={t} />
             </Section>
           )}
         </div>

@@ -47,9 +47,9 @@ export function ReviewForm({
             step={1}
             inputMode="numeric"
             defaultValue={score ?? ""}
-            className="field w-28 font-mono"
+            className="field score-input w-28 font-mono"
           />
-          <span className="font-mono text-muted">/{maxScore}</span>
+          <span className="font-mono text-lg text-muted">/{maxScore}</span>
         </span>
       </label>
       <label className="block">

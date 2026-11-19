@@ -8,6 +8,7 @@ import { getI18n } from "@/i18n";
 import { localePath } from "@/i18n/config";
 import { DeleteHomeworkButton, HomeworkForm } from "@/components/homework-form";
 import { Card } from "@/components/ui";
+import { Notice } from "@/components/notice";
 import { ChevronLeft } from "@/components/icons";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -30,14 +31,14 @@ async function EditHomework({ params }: Pick<PageProps<"/[lang]/homework/[id]/ed
 
   return (
     <div className="max-w-2xl">
-      <Link href={localePath(locale, `/homework/${homework.id}`)} className="mb-0 inline-flex min-h-11 items-center gap-1 text-sm text-muted sm:mb-3 sm:min-h-6">
+      <Link href={localePath(locale, `/homework/${homework.id}`)} className="mb-0 inline-flex min-h-11 items-center gap-1 text-sm text-muted hover:text-ink sm:mb-3 sm:min-h-6">
         <ChevronLeft width={18} height={18} /> {homework.title}
       </Link>
       <h1 className="text-2xl font-semibold tracking-tight">{t.homeworkPage.editTitle}</h1>
       <p className="mb-5 mt-0.5 text-sm text-muted">
         {homework.group.course.title} · {homework.group.name}
       </p>
-      {!canEdit && <p className="mb-4 rounded-xl bg-surface-2 px-3 py-2 text-sm">{t.homeworkPage.termLocked}</p>}
+      {!canEdit && <Notice>{t.homeworkPage.termLocked}</Notice>}
       <Card>
         <HomeworkForm
           target={{ homeworkId: homework.id }}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, type ComponentType, type SVGProps } from "react";
+import { Suspense, type ComponentType, type ReactNode, type SVGProps } from "react";
 import Link from "next/link";
 import { LinkPending } from "./link-pending";
 import { usePathname } from "next/navigation";
@@ -33,14 +33,15 @@ function isActive(path: string, pathname: string | null) {
   return path === "/" ? pathname === "/" : pathname.startsWith(path);
 }
 
-type Props = { locale: Locale; labels: NavLabels };
+// `footer` is the signed-in teacher at the foot of the side navigation. It is rendered on the server and passed in.
+type Props = { locale: Locale; labels: NavLabels; footer?: ReactNode };
 type ViewProps = Props & { pathname: string | null };
 
 function Bar({ locale, labels, pathname }: ViewProps) {
   return (
     <nav
       aria-label={labels.main}
-      className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-surface/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden"
+      className="fixed inset-x-0 bottom-0 z-20 border-t border-line bg-surface pb-[env(safe-area-inset-bottom)] md:hidden"
     >
       <ul className="flex">
         {items.map(({ path, key, Icon }) => {
@@ -50,11 +51,14 @@ function Bar({ locale, labels, pathname }: ViewProps) {
               <Link
                 href={localePath(locale, path)}
                 aria-current={active ? "page" : undefined}
-                className={`flex flex-col items-center gap-0.5 py-2 text-[0.6875rem] font-medium ${
-                  active ? "text-accent" : "text-muted"
+                className={`flex flex-col items-center gap-0.5 py-1.5 text-[0.6875rem] ${
+                  active ? "font-semibold text-accent" : "font-medium text-muted"
                 }`}
               >
-                <Icon strokeWidth={active ? 2.2 : 1.8} />
+                {/* The current page sits in a soft pill, so it reads without relying on colour alone. */}
+                <span className={`grid h-7 w-12 place-items-center rounded-full ${active ? "bg-accent-soft" : ""}`}>
+                  <Icon strokeWidth={active ? 2.2 : 1.8} />
+                </span>
                 <span className="max-w-full truncate px-0.5">{labels[key]}</span>
                 <LinkPending />
               </Link>
@@ -66,14 +70,21 @@ function Bar({ locale, labels, pathname }: ViewProps) {
   );
 }
 
-function Side({ locale, labels, pathname }: ViewProps) {
+// 768-1023px: a narrow rail of icons (the names stay for screen readers). From 1024px: the full sidebar, 14.5rem wide.
+// The page's left padding in the app layout follows the same two widths.
+function Side({ locale, labels, pathname, footer }: ViewProps) {
   return (
-    <aside className="fixed inset-y-0 left-0 z-20 hidden w-56 flex-col border-r border-line bg-surface-2 md:flex">
-      <Link href={localePath(locale, "/")} className="flex h-14 items-center gap-2 px-5 text-[0.9375rem] font-semibold tracking-tight">
-        <BookIcon className="text-accent" />
-        {labels.appName}
+    <aside className="fixed inset-y-0 left-0 z-20 hidden w-16 flex-col border-r border-line bg-surface md:flex lg:w-[14.5rem]">
+      <Link
+        href={localePath(locale, "/")}
+        className="flex h-[3.25rem] shrink-0 items-center gap-2.5 px-4 text-[0.9375rem] font-semibold tracking-tight max-lg:justify-center max-lg:px-0"
+      >
+        <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-accent text-accent-ink">
+          <BookIcon width={16} height={16} />
+        </span>
+        <span className="max-lg:sr-only">{labels.appName}</span>
       </Link>
-      <nav aria-label={labels.main} className="overflow-y-auto px-3 pb-4">
+      <nav aria-label={labels.main} className="flex-1 overflow-y-auto px-3 pb-4 pt-1">
         <ul className="space-y-0.5">
           {items.map(({ path, key, Icon }) => {
             const active = isActive(path, pathname);
@@ -82,12 +93,12 @@ function Side({ locale, labels, pathname }: ViewProps) {
                 <Link
                   href={localePath(locale, path)}
                   aria-current={active ? "page" : undefined}
-                  className={`flex items-center gap-3 rounded-lg border-l-2 px-3 py-2 text-sm font-medium ${
-                    active ? "border-accent bg-surface text-accent" : "border-transparent text-muted hover:text-ink"
+                  className={`flex h-9 items-center gap-3 rounded-lg px-3 text-sm font-medium max-lg:justify-center max-lg:px-0 ${
+                    active ? "bg-accent-soft text-accent" : "text-muted hover:bg-surface-2 hover:text-ink"
                   }`}
                 >
                   <Icon width={20} height={20} strokeWidth={active ? 2.2 : 1.8} />
-                  {labels[key]}
+                  <span className="max-lg:sr-only">{labels[key]}</span>
                   <LinkPending />
                 </Link>
               </li>
@@ -95,6 +106,7 @@ function Side({ locale, labels, pathname }: ViewProps) {
           })}
         </ul>
       </nav>
+      {footer && <div className="shrink-0 border-t border-line p-3">{footer}</div>}
     </aside>
   );
 }

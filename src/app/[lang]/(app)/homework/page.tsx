@@ -23,9 +23,7 @@ async function Queue() {
   return (
     <>
       <PageTitle title={t.dashboard.toCheck} />
-      <div className="max-w-3xl">
-        <HomeworkToCheck items={items} timeZone={teacher.timezone} locale={locale} t={t} />
-      </div>
+      <HomeworkToCheck items={items} now={new Date()} timeZone={teacher.timezone} locale={locale} t={t} />
     </>
   );
 }

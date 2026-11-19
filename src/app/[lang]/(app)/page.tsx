@@ -51,7 +51,7 @@ async function Dashboard() {
         </Section>
         <div>
           <Section title={t.dashboard.toCheck}>
-            <HomeworkToCheck items={toCheck} timeZone={teacher.timezone} locale={locale} t={t} />
+            <HomeworkToCheck items={toCheck} now={now} timeZone={teacher.timezone} locale={locale} t={t} />
           </Section>
           <Section title={t.dashboard.fallingBehind}>
             {behind.length === 0 ? (
@@ -62,7 +62,7 @@ async function Dashboard() {
                   <Link
                     key={`${group.id}:${student.id}`}
                     href={localePath(locale, `/groups/${group.id}`)}
-                    className="block px-4 py-3"
+                    className="block px-4 py-3 hover:bg-surface-2"
                   >
                     <span className="flex flex-wrap items-baseline justify-between gap-x-3">
                       <span className="font-medium">{student.name}</span>

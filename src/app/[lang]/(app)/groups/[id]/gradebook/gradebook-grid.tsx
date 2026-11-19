@@ -4,7 +4,8 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import type { MarkType } from "@/generated/prisma/enums";
 import type { GradebookCell, GradebookColumn, GradebookRow } from "@/lib/data";
-import { averageBand, formatAverage } from "@/lib/grading";
+import { averageBand } from "@/lib/grading";
+import { AverageValue } from "@/components/average-value";
 import { formatScore } from "@/lib/format-score";
 import { fmt } from "@/i18n/format";
 import { localePath, type Locale } from "@/i18n/config";
@@ -52,7 +53,7 @@ function EditableCell({
           if (event.key === "Enter") event.currentTarget.blur();
           if (event.key === "Escape") setEditing(false);
         }}
-        className="w-16 rounded-md border border-accent bg-bg px-1 py-1 text-center font-mono text-sm outline-none"
+        className="h-11 w-full min-w-0 rounded-md border-2 border-accent bg-surface px-1 text-center font-mono text-sm outline-none sm:h-9"
       />
     );
   }
@@ -63,7 +64,7 @@ function EditableCell({
       disabled={pending}
       aria-label={label}
       title={cell.comment ?? undefined}
-      className="min-h-11 w-full rounded-md sm:min-h-9 px-2 font-mono text-sm hover:bg-surface-2 disabled:opacity-50"
+      className="editable-mark min-h-11 w-full rounded-md px-2 font-mono text-sm disabled:opacity-50 sm:min-h-9"
     >
       {formatScore(cell.value)}
     </button>
@@ -97,7 +98,7 @@ export function GradebookGrid({
   // The student and average columns stay in view while the marks scroll sideways, and the header row stays in view
   // while the students scroll up and down. On a phone they are narrow (176px of 360) so several lessons fit.
   const nameWidth = "w-28 min-w-28 max-w-28 sm:w-44 sm:min-w-44 sm:max-w-44";
-  const averageWidth = "w-16 min-w-16 sm:w-20 sm:min-w-20 border-r border-line";
+  const averageWidth = "frozen-edge w-16 min-w-16 sm:w-20 sm:min-w-20";
   const averageLeft = "left-28 sm:left-44";
   const stickyName = `sticky left-0 z-10 bg-surface ${nameWidth}`;
   const stickyAverage = `sticky ${averageLeft} z-10 bg-surface ${averageWidth}`;
@@ -131,7 +132,7 @@ export function GradebookGrid({
                   key={column.key}
                   scope="col"
                   title={column.title ?? undefined}
-                  className={`${headCell} min-w-[4.75rem] border-b border-line px-1 py-2 text-center font-medium`}
+                  className={`${headCell} w-[4.75rem] min-w-[4.75rem] border-b border-line px-1 py-2 text-center font-semibold`}
                 >
                   {column.href ? (
                     <Link href={localePath(locale, column.href)} className="block py-1.5 text-accent">
@@ -158,14 +159,14 @@ export function GradebookGrid({
                   {!row.enrolled && <span className="block text-[0.6875rem] font-normal">{t.left}</span>}
                 </th>
                 <td
-                  className={`${stickyAverage} border-b px-1 py-1.5 text-center font-mono font-semibold sm:px-2 ${
+                  className={`${stickyAverage} summary-cell border-b px-1 py-1.5 text-center font-mono font-semibold sm:px-2 ${
                     row.average === null ? "text-muted" : bandText[averageBand(row.average)]
                   }`}
                 >
-                  {row.average === null ? "—" : formatAverage(row.average)}
+                  <AverageValue average={row.average} />
                 </td>
                 {showFinal && (
-                  <td className="border-b border-r border-line px-2 py-1.5 text-center font-mono">
+                  <td className="summary-cell border-b border-r border-line px-2 py-1.5 text-center font-mono">
                     {row.finalGrade === null ? "—" : formatScore(row.finalGrade)}
                   </td>
                 )}
@@ -178,14 +179,17 @@ export function GradebookGrid({
                   return (
                     <td key={column.key} className="border-b border-line px-0.5 py-1 text-center">
                       {!cell ? (
-                        <span className="text-muted">·</span>
+                        <span className="text-muted opacity-60">–</span>
                       ) : column.homeworkId ? (
                         <Link
                           href={localePath(locale, `/homework/${column.homeworkId}/students/${row.id}`)}
                           aria-label={label}
-                          className="block rounded-md px-2 py-1.5 font-mono text-sm text-accent hover:bg-surface-2"
+                          className="block rounded-md px-2 py-1.5 font-mono text-sm text-accent hover:bg-accent-soft"
                         >
                           {formatScore(cell.value)}
+                          <span aria-hidden="true" className="ml-0.5 text-[0.625rem] opacity-70">
+                            ↗
+                          </span>
                         </Link>
                       ) : canEdit && row.enrolled ? (
                         <EditableCell cell={cell} label={label} onResult={setState} />

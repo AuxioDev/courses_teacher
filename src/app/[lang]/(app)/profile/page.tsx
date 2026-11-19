@@ -43,16 +43,16 @@ async function Profile() {
           />
         </Card>
         <Card className="mb-4">
-          <h2 className="mb-3 text-sm font-semibold">{t.password.changeTitle}</h2>
+          <h2 className="mb-3 text-[0.9375rem] font-semibold">{t.password.changeTitle}</h2>
           <PasswordForm mode="change" username={teacher.email} labels={t.password} errors={t.errors} ok={t.ok} />
         </Card>
         <Card className="mb-4">
-          <h2 className="text-sm font-semibold">{t.profile.security}</h2>
+          <h2 className="text-[0.9375rem] font-semibold">{t.profile.security}</h2>
           <p className="mb-3 mt-0.5 text-xs text-muted">{t.profile.logoutEverywhereHint}</p>
           <form action={logoutEverywhere}>
             <SubmitButton className="btn-ghost">{t.profile.logoutEverywhere}</SubmitButton>
           </form>
-          <Link href={localePath(locale, "/privacy")} className="mt-3 inline-flex min-h-11 items-center text-sm text-accent sm:min-h-6">
+          <Link href={localePath(locale, "/privacy")} className="mt-3 inline-flex min-h-11 items-center text-sm text-accent underline-offset-2 hover:underline sm:min-h-6">
             {t.privacy.link}
           </Link>
         </Card>

@@ -98,6 +98,7 @@ export const en = {
     attendance: "Attendance",
     markAllPresent: "Mark all present",
     notMarked: { one: "{n} student not marked", other: "{n} students not marked" },
+    notMarkedChip: "Not marked",
     saveAttendance: "Save attendance",
     saving: "Saving…",
     unsaved: "Unsaved changes",

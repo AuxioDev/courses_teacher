@@ -1,123 +1,713 @@
-/* Teacher App: the class register. Pale ledger paper with faint ruled lines, deep pine ink, a
-   teal-blue pen for the accent, and a gradebook that reads like a real register: column rules,
-   striped rows, narrow even-width numerals. Loaded after globals.css, which is identical in all
-   three apps (the Student and Admin apps compare it byte for byte), so everything that differs
-   lives here. Contrast is checked by src/lib/__tests__/contrast.test.ts. */
+/* Teacher App design layer: "Calm Academic, working density". The same system as the Student Diary (cool neutral
+   canvas, white surfaces, one blue primary, status colours only where they mean something), tuned for a tool that is
+   read all day: tighter rows, smaller radii on data, even-width numerals, no decoration. The one colour that differs
+   from the Student app is the primary (--accent), a little bluer.
+   Loaded after globals.css, which is identical in all three apps (the Student and Admin apps compare it byte for
+   byte), so everything that differs lives here, including restyling the shared classes and components by selector.
+   This file is unlayered, so it wins over Tailwind utilities of equal specificity.
+   Contrast is checked by src/lib/__tests__/contrast.test.ts, which reads every `--token: #hex;` below. Keep colour
+   tokens inside the light block and the two dark blocks, and keep the dark blocks after the first dark media query. */
 :root {
-  --bg: #f4f6f2;
-  --surface: #fdfefb;
-  --surface-2: #e6ebe3;
-  --ink: #16302f;
-  --muted: #4a625f;
-  --line: #c9d4c8;
-  --accent: #0b6e8f;
+  color-scheme: light;
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --surface-2: #eef1f7;
+  --ink: #141a2e;
+  --muted: #596278;
+  --line: #dde2ec;
+  --rule: #e8ebf2;
+  --accent: #2f5fd0;
   --accent-ink: #ffffff;
-  --accent-soft: #e0f1f7;
-  --rule: #e0e8dd;
+  --accent-soft: #e8effc;
+  --accent-hover: #264db0;
+  --secondary: #0e7c74;
+  --info: #1f6fb2;
+  --info-soft: #e6f1fa;
+  --good: #18794e;
+  --good-soft: #e6f4ec;
+  --warn: #9a5b00;
+  --warn-soft: #fdf2df;
+  --bad: #c0262d;
+  --bad-soft: #fdecec;
+  --bad-hover: #a31f25;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --shadow-1: 0 1px 2px rgb(16 24 40 / 0.06);
+  --shadow-2: 0 8px 24px rgb(16 24 40 / 0.1);
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%23596278' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 8l5 5 5-5'/%3E%3C/svg%3E");
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f1a19;
-    --surface: #14211f;
-    --surface-2: #1d2f2c;
-    --ink: #e4efec;
-    --muted: #9db5b0;
-    --line: #2b413d;
-    --accent: #5cc0e0;
-    --accent-ink: #06222d;
-    --accent-soft: #173845;
-    --rule: #162624;
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #0d1220;
+    --surface: #151b2c;
+    --surface-2: #1d2538;
+    --ink: #e8ecf5;
+    --muted: #9aa4bb;
+    --line: #283149;
+    --rule: #202941;
+    --accent: #86a8ff;
+    --accent-ink: #0d1220;
+    --accent-soft: #1b2c52;
+    --accent-hover: #a0bbff;
+    --secondary: #4fd1c5;
+    --info: #6cb5f0;
+    --info-soft: #142d44;
+    --good: #4cc68a;
+    --good-soft: #15352a;
+    --warn: #f2b45a;
+    --warn-soft: #3a2c14;
+    --bad: #ff8f8a;
+    --bad-soft: #43201f;
+    --bad-hover: #ffa7a2;
+    --shadow-1: none;
+    --shadow-2: 0 8px 24px rgb(0 0 0 / 0.45);
+    --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%239aa4bb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 8l5 5 5-5'/%3E%3C/svg%3E");
   }
 }
 
-/* Ruled paper: a line every 2rem. */
-body {
-  background-color: var(--bg);
-  background-image: repeating-linear-gradient(to bottom, transparent 0 31px, var(--rule) 31px 32px);
+/* A choice stored in this browser (data-theme, set before first paint by <ThemeBoot> in the root layout) beats the
+   device setting. Nothing in the app sets it; it is honoured if it is there. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0d1220;
+  --surface: #151b2c;
+  --surface-2: #1d2538;
+  --ink: #e8ecf5;
+  --muted: #9aa4bb;
+  --line: #283149;
+  --rule: #202941;
+  --accent: #86a8ff;
+  --accent-ink: #0d1220;
+  --accent-soft: #1b2c52;
+  --accent-hover: #a0bbff;
+  --secondary: #4fd1c5;
+  --info: #6cb5f0;
+  --info-soft: #142d44;
+  --good: #4cc68a;
+  --good-soft: #15352a;
+  --warn: #f2b45a;
+  --warn-soft: #3a2c14;
+  --bad: #ff8f8a;
+  --bad-soft: #43201f;
+  --bad-hover: #ffa7a2;
+  --shadow-1: none;
+  --shadow-2: 0 8px 24px rgb(0 0 0 / 0.45);
+  --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%239aa4bb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 8l5 5 5-5'/%3E%3C/svg%3E");
 }
 
-/* A register page opens with a double rule under its title. It is drawn once, on load. */
-main h1 {
-  font-weight: 700;
-  letter-spacing: -0.01em;
+body {
+  font-size: 0.9375rem;
+  line-height: 1.45;
 }
-main h1::after {
-  content: "";
-  display: block;
-  height: 4px;
-  margin-top: 0.4rem;
-  border-block: 1px solid var(--accent);
-  transform-origin: left;
-  animation: rule-draw var(--dur-slow) 0.05s var(--ease-out) both;
+
+main h1 {
+  font-weight: 650;
+  letter-spacing: -0.02em;
 }
 main h2 {
   font-weight: 650;
 }
 
-/* Numbers (marks, times, counts) are set narrow, so a whole term of columns fits on one screen. */
+/* ---------------------------------------------------------------------------------------------------------------
+   Page headers and section headings
+   Every page of the app opens the same way: a back link (detail pages), a 22px title with a muted line under it, and
+   the page's actions on the right. Only the app's own pages are sized (main.max-w-6xl); the sign-in screens keep theirs.
+   --------------------------------------------------------------------------------------------------------------- */
+main.max-w-6xl h1 {
+  font-size: 1.375rem;
+  line-height: 1.75rem;
+}
+/* PageTitle (shared) leaves 1rem under it; the detail-page headers leave 1.25rem. One gap for all. */
+main div.mb-4.flex.items-end.justify-between.gap-3 {
+  margin-bottom: 1.25rem;
+}
+/* A section's heading is a heading, not a caption: ink, a little larger. (Day headings in the week view are not in a
+   section's title row, so they keep their own look.) */
+main section > div > h2 {
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+/* A line of explanation above a page's content (see <Notice>). */
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--line);
+  border-left-width: 3px;
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  color: var(--ink);
+  font-size: 0.875rem;
+  line-height: 1.45;
+}
+.notice > svg {
+  color: var(--muted);
+}
+.notice-info {
+  border-color: color-mix(in srgb, var(--info) 30%, var(--line));
+  border-left-color: var(--info);
+  background: var(--info-soft);
+}
+.notice-info > svg {
+  color: var(--info);
+}
+.notice-warn {
+  border-color: color-mix(in srgb, var(--warn) 30%, var(--line));
+  border-left-color: var(--warn);
+  background: var(--warn-soft);
+}
+.notice-warn > svg {
+  color: var(--warn);
+}
+
+/* Times, counts and marks: the body face with even-width digits, so columns of numbers line up. */
 body .font-mono {
-  font-stretch: 78%;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-variant-numeric: tabular-nums;
+}
+body .font-mono:is(.text-lg, .text-xl, .text-2xl, .text-3xl) {
+  font-weight: 650;
   letter-spacing: -0.01em;
 }
 
-/* The gradebook: striped rows, a highlight under the pen. */
-main tbody tr {
+/* ---------------------------------------------------------------------------------------------------------------
+   Tables (the student tables and the gradebook)
+   A header band, quiet row rules, no zebra, and a hover that tints the WHOLE row. The tint is painted on the cells, not
+   the row, as an opaque colour, so the frozen (sticky) cells take it too instead of staying white.
+   --------------------------------------------------------------------------------------------------------------- */
+main thead th {
+  background-color: var(--surface-2);
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+main tbody.divide-y.divide-line > tr {
+  border-color: var(--rule);
+}
+main tbody td,
+main tbody th {
+  border-bottom-color: var(--rule);
   transition: background-color var(--dur-fast);
 }
-main tbody tr:nth-child(even) {
-  background: color-mix(in srgb, var(--surface-2) 45%, transparent);
+main tbody th[scope="row"] {
+  font-weight: 600;
 }
-main tbody tr:hover {
+main tbody tr:hover > :is(td, th) {
+  background-color: color-mix(in srgb, var(--accent) 6%, var(--surface));
+}
+
+/* The totals beside the name (average, final) sit on a faint tint, so they read as a summary and not as a lesson. */
+.summary-cell {
+  background-color: color-mix(in srgb, var(--surface-2) 50%, var(--surface));
+}
+
+/* The last frozen column ends in a hairline, and a soft shadow fades in once the table has scrolled sideways. The
+   shadow is a pseudo-element whose opacity follows the scroll position (where the browser supports that); without
+   support it simply stays off and the hairline remains. */
+.frozen-edge {
+  box-shadow: inset -1px 0 0 var(--line);
+}
+.frozen-edge::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -0.5rem;
+  width: 0.5rem;
+  background: linear-gradient(to right, rgb(0 0 0 / 0.14), transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+@supports (animation-timeline: scroll()) {
+  .frozen-edge::after {
+    animation: frozen-edge-in linear both;
+    animation-timeline: scroll(nearest inline);
+    animation-range: 0 1.5rem;
+  }
+  @keyframes frozen-edge-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/* A lesson mark that can be corrected in place: a dashed underline says so, and the pen shows on hover. Marks that
+   cannot be edited (a homework mark, a closed term) have none. */
+.editable-mark {
+  text-decoration: underline dashed;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.3em;
+  text-decoration-color: color-mix(in srgb, var(--muted) 55%, transparent);
+  transition:
+    background-color var(--dur-fast) ease,
+    color var(--dur-fast) ease;
+}
+.editable-mark:hover:not(:disabled) {
   background: var(--accent-soft);
+  color: var(--accent);
+  text-decoration-color: var(--accent);
 }
 
-/* The first rows are written in one after another when a table loads: 14 rows, done in about 0.55 s. */
-main tbody > tr:nth-child(-n + 14) {
-  animation: row-wipe var(--dur-base) var(--ease-out) both;
-}
-main tbody > tr:nth-child(2) { animation-delay: 20ms; }
-main tbody > tr:nth-child(3) { animation-delay: 40ms; }
-main tbody > tr:nth-child(4) { animation-delay: 60ms; }
-main tbody > tr:nth-child(5) { animation-delay: 80ms; }
-main tbody > tr:nth-child(6) { animation-delay: 100ms; }
-main tbody > tr:nth-child(7) { animation-delay: 120ms; }
-main tbody > tr:nth-child(8) { animation-delay: 140ms; }
-main tbody > tr:nth-child(9) { animation-delay: 160ms; }
-main tbody > tr:nth-child(10) { animation-delay: 180ms; }
-main tbody > tr:nth-child(11) { animation-delay: 200ms; }
-main tbody > tr:nth-child(12) { animation-delay: 220ms; }
-main tbody > tr:nth-child(13) { animation-delay: 240ms; }
-main tbody > tr:nth-child(14) { animation-delay: 260ms; }
+/* ---------------------------------------------------------------------------------------------------------------
+   Shapes and surfaces
+   --------------------------------------------------------------------------------------------------------------- */
 
-@keyframes rule-draw {
-  from {
-    transform: scaleX(0);
+/* One radius scale: 6 chips, 8 controls, 12 cards and dialogs. The utilities already in the pages map onto it. */
+.rounded-2xl {
+  border-radius: var(--radius-lg);
+}
+.rounded-xl,
+.rounded-lg {
+  border-radius: var(--radius-md);
+}
+.rounded-md {
+  border-radius: var(--radius-sm);
+}
+
+/* A table that scrolls sideways keeps its white card (the shared edge-shadow rule resets the background colour). */
+.scroll-hint.bg-surface {
+  background-color: var(--surface);
+}
+
+/* Cards (and lists that are cards) rest on a hairline and a whisper of shadow. */
+.rounded-2xl.border-line.bg-surface {
+  box-shadow: var(--shadow-1);
+  transition:
+    border-color var(--dur-fast) ease,
+    box-shadow var(--dur-base) var(--ease-out);
+}
+/* A card that is a link answers the pointer. */
+a:hover > .rounded-2xl.border-line.bg-surface,
+a.rounded-2xl.border-line.bg-surface:hover {
+  border-color: color-mix(in srgb, var(--ink) 18%, var(--line));
+  box-shadow: var(--shadow-2);
+}
+
+/* "It worked" and "it didn't" boxes follow the control radius and carry a tone bar. */
+[role="alert"].rounded-xl,
+[role="status"].rounded-xl {
+  border-radius: var(--radius-md);
+}
+p[role="alert"].bg-bad-soft {
+  border-left: 3px solid var(--bad);
+}
+:is(p, div)[role="status"].bg-good-soft {
+  border-left: 3px solid var(--good);
+}
+
+/* ---------------------------------------------------------------------------------------------------------------
+   Buttons: .btn is primary, .btn-ghost is secondary, a ghost with text-bad is destructive
+   --------------------------------------------------------------------------------------------------------------- */
+.btn,
+.btn-ghost {
+  min-height: 2.5rem;
+  border-radius: var(--radius-md);
+  transition:
+    background-color var(--dur-fast) ease,
+    border-color var(--dur-fast) ease,
+    color var(--dur-fast) ease,
+    box-shadow var(--dur-fast) ease,
+    transform var(--dur-fast) var(--ease-out);
+}
+@media (max-width: 639px) {
+  .btn,
+  .btn-ghost {
+    min-height: 2.75rem;
   }
+}
+.btn {
+  box-shadow: var(--shadow-1);
+}
+.btn:hover:not(:disabled) {
+  background: var(--accent-hover);
+}
+.btn-ghost {
+  border-color: var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-1);
+}
+.btn-ghost:hover:not(:disabled) {
+  background: var(--surface-2);
+  border-color: color-mix(in srgb, var(--ink) 18%, var(--line));
+}
+/* A ghost button can carry a status colour (Give zero, Delete, Sign out): the utility must beat the ghost colour. */
+.btn-ghost.text-bad {
+  color: var(--bad);
+}
+.btn-ghost.text-bad:hover:not(:disabled) {
+  background: var(--bad-soft);
+  border-color: color-mix(in srgb, var(--bad) 35%, var(--line));
+}
+/* Disabled reads as disabled, not only as faded. */
+.btn:disabled,
+.btn-ghost:disabled {
+  opacity: 1;
+  background: var(--surface-2);
+  border-color: var(--line);
+  color: var(--muted);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.btn[aria-disabled="true"][data-pending],
+.btn-ghost[aria-disabled="true"][data-pending] {
+  cursor: progress;
+}
+/* A submit in flight shows a small spinner after its label. */
+[data-pending]:is(.btn, .btn-ghost)::after {
+  content: "";
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-left: 0.5rem;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 9999px;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
   to {
-    transform: scaleX(1);
-  }
-}
-@keyframes row-wipe {
-  from {
-    clip-path: inset(0 100% 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
+    transform: rotate(360deg);
   }
 }
 
-/* Choosing an attendance status: the chosen cell pops, like a circle drawn with the pen. */
-input[type="radio"]:checked + span {
-  animation: choice-pop var(--dur-base) var(--ease-spring) both;
+.icon-btn {
+  border-radius: var(--radius-md);
+  transition:
+    background-color var(--dur-fast) ease,
+    color var(--dur-fast) ease;
+}
+.icon-btn:hover:not(:disabled) {
+  background: var(--surface-2);
+  color: var(--ink);
 }
 
-@keyframes choice-pop {
-  from {
-    transform: scale(0.88);
-  }
-  to {
-    transform: scale(1);
+/* ---------------------------------------------------------------------------------------------------------------
+   Fields
+   --------------------------------------------------------------------------------------------------------------- */
+.field {
+  min-height: 2.5rem;
+  border-radius: var(--radius-md);
+  border-color: var(--line);
+  font-size: 0.9375rem;
+}
+@media (max-width: 639px) {
+  .field {
+    min-height: 2.75rem;
   }
 }
+textarea.field {
+  min-height: 0;
+}
+.field:hover:not(:focus):not(:disabled) {
+  border-color: color-mix(in srgb, var(--ink) 22%, var(--line));
+}
+.field:focus {
+  border-color: var(--accent);
+}
+.field[aria-invalid="true"] {
+  border-color: var(--bad);
+}
+.field[aria-invalid="true"]:focus {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--bad) 18%, transparent);
+}
+.field:disabled {
+  background: var(--surface-2);
+  color: var(--muted);
+}
+select.field {
+  appearance: none;
+  padding-right: 2.25rem;
+  background-image: var(--chevron);
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+}
+input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+/* The file drop zone. */
+label.border-dashed.border-line {
+  border-radius: var(--radius-md);
+}
+label.border-dashed.border-line:hover {
+  border-color: color-mix(in srgb, var(--ink) 30%, var(--line));
+  background: var(--surface-2);
+}
+
+/* ---------------------------------------------------------------------------------------------------------------
+   Menus, dialogs, expandable rows
+   --------------------------------------------------------------------------------------------------------------- */
+.menu-pop {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
+}
+.menu-pop :is(a, button):hover {
+  background: var(--surface-2);
+}
+/* The language button. */
+div.relative > button[aria-expanded].border-line {
+  border-radius: var(--radius-md);
+  transition:
+    background-color var(--dur-fast) ease,
+    border-color var(--dur-fast) ease;
+}
+div.relative > button[aria-expanded].border-line:hover {
+  background: var(--surface-2);
+  border-color: color-mix(in srgb, var(--ink) 18%, var(--line));
+}
+
+dialog.confirm-dialog {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-2);
+}
+dialog.confirm-dialog::backdrop {
+  background: rgb(10 14 28 / 0.45);
+}
+/* On a phone the question rises from the bottom edge as a sheet. */
+@media (max-width: 639px) {
+  dialog.confirm-dialog {
+    width: 100%;
+    max-width: none;
+    margin: auto 0 0;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* An expandable row (earlier attempts) shows that it expands. */
+details > summary {
+  position: relative;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details > summary::after {
+  content: "";
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-left: 0.75rem;
+  border: solid var(--muted);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+details[open] > summary::after {
+  transform: rotate(-135deg) translateY(-2px);
+}
+details > summary {
+  border-radius: var(--radius-lg);
+}
+details[open] > summary {
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+details > summary:hover {
+  background: var(--surface-2);
+}
+
+/* ---------------------------------------------------------------------------------------------------------------
+   Status system. One vocabulary wherever a status is shown, so it never rests on colour alone:
+     good    ✓  present, graded, on time          warn   !  late, returned, moved, needs attention
+     bad     ✕  absent, missing, cancelled        accent ●  to check, waiting (the primary tint)
+     neutral ○  excused, not yet, locked          not marked: dashed outline (.status-not-marked)
+   The shared <Badge> is plain text in a coloured pill and cannot take an icon in its markup, so the badge is matched
+   by its classes and the icon is drawn with a mask (the same shapes as the *Icon components in icons.tsx).
+   --------------------------------------------------------------------------------------------------------------- */
+:root {
+  --mark-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E");
+  --mark-cross: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E");
+  --mark-alert: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5v9M12 19v.01'/%3E%3C/svg%3E");
+  --mark-dot: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='5.5' fill='black'/%3E%3C/svg%3E");
+  --mark-ring: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3'%3E%3Ccircle cx='12' cy='12' r='6.5'/%3E%3C/svg%3E");
+}
+
+/* A badge: 22px high, a 6px corner, 12px type, and a leading mark. */
+span.inline-flex.rounded-full.px-2.font-semibold {
+  min-height: 1.375rem;
+  gap: 0.25rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  line-height: 1;
+  white-space: nowrap;
+}
+span.inline-flex.rounded-full.px-2.font-semibold::before {
+  content: "";
+  flex: none;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: currentColor;
+  -webkit-mask: var(--badge-mark, none) center / contain no-repeat;
+  mask: var(--badge-mark, none) center / contain no-repeat;
+}
+span.inline-flex.rounded-full.px-2.font-semibold.bg-good-soft {
+  --badge-mark: var(--mark-check);
+}
+span.inline-flex.rounded-full.px-2.font-semibold.bg-warn-soft {
+  --badge-mark: var(--mark-alert);
+}
+span.inline-flex.rounded-full.px-2.font-semibold.bg-bad-soft {
+  --badge-mark: var(--mark-cross);
+}
+/* "neutral" (excused, locked) and "accent" (to check, waiting) share the grey pill in the shared component; they are
+   told apart here: neutral stays quiet, accent takes the primary tint. */
+span.inline-flex.rounded-full.px-2.font-semibold.bg-surface-2.text-muted {
+  --badge-mark: var(--mark-ring);
+}
+span.inline-flex.rounded-full.px-2.font-semibold.bg-surface-2.text-ink {
+  --badge-mark: var(--mark-dot);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* A student with no attendance mark yet: the same chip shape, outlined and dashed instead of filled. */
+.status-not-marked {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  min-height: 1.375rem;
+  padding: 0 0.5rem;
+  border: 1px dashed color-mix(in srgb, var(--muted) 55%, var(--line));
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+.status-not-marked::before {
+  content: "";
+  flex: none;
+  width: 0.75rem;
+  height: 0.75rem;
+  background: currentColor;
+  -webkit-mask: var(--mark-ring) center / contain no-repeat;
+  mask: var(--mark-ring) center / contain no-repeat;
+}
+
+/* ---------------------------------------------------------------------------------------------------------------
+   Attendance and marks
+   --------------------------------------------------------------------------------------------------------------- */
+
+/* A student not marked yet: the row is outlined with a dashed line inside its edge, next to the "Not marked" chip. */
+.not-marked-row {
+  outline: 1px dashed color-mix(in srgb, var(--muted) 45%, var(--line));
+  outline-offset: -4px;
+  border-radius: var(--radius-md);
+}
+
+/* The status chips are radio buttons in disguise: an unchosen one answers the pointer, a chosen one keeps its fill. */
+input[type="radio"]:not(:checked):not(:disabled) + span {
+  transition:
+    background-color var(--dur-fast) ease,
+    color var(--dur-fast) ease;
+}
+input[type="radio"]:not(:checked):not(:disabled) + span:hover {
+  background: color-mix(in srgb, var(--ink) 9%, var(--surface-2));
+  color: var(--ink);
+}
+
+/* The bar that holds Save while the roster scrolls under it. */
+.save-bar {
+  box-shadow: var(--shadow-2);
+}
+
+/* Entering a mark for every student: on a laptop or tablet the fields are 34px, so a whole class fits on a screen. Phones
+   keep the full 44px touch size. */
+@media (min-width: 640px) {
+  .field.field-compact {
+    min-height: 2.125rem;
+    padding-block: 0.25rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------------------------
+   Lists, lessons and the calendar
+   --------------------------------------------------------------------------------------------------------------- */
+
+/* A list that is one card of rows: quiet rules between rows, and the card clips the row hover to its rounded corners.
+   The focus ring of a row link is drawn inside, so the clip does not cut it off. */
+.divide-y.divide-line > :not(:last-child) {
+  border-color: var(--rule);
+}
+.rounded-2xl.divide-y {
+  overflow: hidden;
+}
+.divide-y > a:focus-visible {
+  outline-offset: -2px;
+}
+
+/* A lesson that is on now, or about to start: the secondary colour on the card edge, the rule and the Join button. */
+.lesson-live {
+  border-color: color-mix(in srgb, var(--secondary) 45%, var(--line));
+}
+.border-live {
+  border-color: var(--secondary);
+}
+.btn.btn-join {
+  background: var(--secondary);
+}
+.btn.btn-join:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--secondary) 85%, var(--ink));
+}
+
+/* Week / Month: a grey track with a white, lifted segment for the current one. */
+.segmented > a[aria-current="page"] {
+  box-shadow: var(--shadow-1);
+}
+.segmented > a {
+  transition:
+    background-color var(--dur-fast) ease,
+    color var(--dur-fast) ease;
+}
+
+/* ---------------------------------------------------------------------------------------------------------------
+   The review screen
+   --------------------------------------------------------------------------------------------------------------- */
+
+/* The teacher's earlier feedback on an attempt is a note, not a warning: a quiet info tint with a bar on the left. */
+.feedback-note {
+  border: 1px solid color-mix(in srgb, var(--info) 25%, var(--line));
+  border-left: 3px solid var(--info);
+  border-radius: var(--radius-md);
+  background: var(--info-soft);
+  color: var(--ink);
+}
+
+/* The score is the one number this form is for, so its field is the biggest thing in it. */
+.field.score-input {
+  min-height: 3rem;
+  font-size: 1.25rem;
+  font-weight: 650;
+  text-align: center;
+}
+
+/* ---------------------------------------------------------------------------------------------------------------
+   Sign-in, forms and the rest
+   --------------------------------------------------------------------------------------------------------------- */
+
+/* The dim layer over the sign-in photo on a phone: the same in light and dark, so the card on top always stands out. */
+.login-scrim {
+  background: rgb(10 14 28 / 0.5);
+}
+
+/* A field that cannot be changed (a closed term, a score that is already in use) shows it in its fill and text, so the
+   shared "disabled:opacity-60" in the forms does not fade it a second time. */
+.field:disabled,
+.field[readonly] {
+  opacity: 1;
+}
+.field[readonly] {
+  background: var(--surface-2);
+  color: var(--muted);
+}
+

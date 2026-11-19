@@ -1,25 +1,18 @@
 import type { Metadata, Viewport } from "next";
-import { Ysabeau_Office, Martian_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import { lang } from "next/root-params";
 import { locales } from "@/i18n/config";
 import { getI18n } from "@/i18n";
 import "../globals.css";
 import "../role-theme.css";
 import "../motion.css";
+import { ThemeBoot } from "@/components/theme-boot";
 
-const bodyFont = Ysabeau_Office({
-  // The shared stylesheet names its sans and mono variables after Geist, so these keep those names.
+const bodyFont = Inter({
+  // The shared stylesheet names its sans variable after Geist, so this keeps that name. Numbers (marks, times) use
+  // the same face with even-width digits (role-theme.css), so there is no second font to load.
   variable: "--font-geist-sans",
   subsets: ["latin", "latin-ext", "cyrillic"],
-  display: "swap",
-});
-
-// Only used for numbers (times, scores), so it is not preloaded.
-const monoFont = Martian_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin", "latin-ext", "cyrillic"],
-  axes: ["wdth"],
-  preload: false,
   display: "swap",
 });
 
@@ -42,15 +35,18 @@ export const viewport: Viewport = {
   initialScale: 1,
   viewportFit: "cover",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#f4f6f2" },
-    { media: "(prefers-color-scheme: dark)", color: "#0f1a19" },
+    { media: "(prefers-color-scheme: light)", color: "#f6f7fb" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d1220" },
   ],
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/[lang]">) {
   return (
-    <html lang={await lang()} className={`${bodyFont.variable} ${monoFont.variable} h-full antialiased`}>
-      <body className="min-h-full font-sans">{children}</body>
+    <html lang={await lang()} className={`${bodyFont.variable} h-full antialiased`} suppressHydrationWarning>
+      <body className="min-h-full font-sans">
+        <ThemeBoot />
+        {children}
+      </body>
     </html>
   );
 }

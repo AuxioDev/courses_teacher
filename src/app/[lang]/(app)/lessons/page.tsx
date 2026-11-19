@@ -19,7 +19,7 @@ import { getI18n } from "@/i18n";
 import { localePath, type Locale } from "@/i18n/config";
 import { LessonCard } from "@/components/lesson-card";
 import { TermSwitcher } from "@/components/term-switcher";
-import { Empty } from "@/components/ui";
+import { Empty, PageTitle } from "@/components/ui";
 import { ChevronLeft, ChevronRight } from "@/components/icons";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -71,6 +71,7 @@ async function Lessons({ searchParams }: Pick<PageProps<"/[lang]/lessons">, "sea
 
   return (
     <>
+      <PageTitle title={t.nav.lessons} />
       <TermSwitcher
         terms={terms}
         selected={selectedTerm}
@@ -79,12 +80,13 @@ async function Lessons({ searchParams }: Pick<PageProps<"/[lang]/lessons">, "sea
         currentLabel={t.common.current}
       />
 
-      <div className="mb-4 flex rounded-xl border border-line bg-surface p-1 text-sm font-medium md:max-w-xs">
+      <div className="segmented mb-4 flex rounded-xl bg-surface-2 p-1 text-sm font-medium md:max-w-xs">
         {(["week", "month"] as const).map((v) => (
           <Link
             key={v}
             href={href(v, anchor)}
-            className={`flex-1 rounded-lg py-1.5 text-center ${view === v ? "bg-accent text-accent-ink" : "text-muted"}`}
+            aria-current={view === v ? "page" : undefined}
+            className={`flex-1 rounded-lg py-1.5 text-center ${view === v ? "bg-surface text-ink shadow-sm" : "text-muted hover:text-ink"}`}
           >
             {t.lessons[v]}
           </Link>
@@ -95,7 +97,7 @@ async function Lessons({ searchParams }: Pick<PageProps<"/[lang]/lessons">, "sea
         <Link href={href(view, prev)} className="btn-ghost px-2" aria-label={t.common.previous}>
           <ChevronLeft />
         </Link>
-        <h1 className="text-lg font-semibold first-letter:uppercase">{title}</h1>
+        <h2 className="text-lg font-semibold first-letter:uppercase">{title}</h2>
         <Link href={href(view, next)} className="btn-ghost px-2" aria-label={t.common.next}>
           <ChevronRight />
         </Link>
@@ -169,7 +171,7 @@ function MonthGrid({
             <Link
               key={key}
               href={localePath(locale, `/lessons?view=week&date=${key}`)}
-              className={`min-h-16 min-w-0 border-b border-r border-line p-1 text-xs ${inMonth ? "" : "bg-surface-2/60 text-muted"}`}
+              className={`min-h-16 min-w-0 border-b border-r border-line p-1 text-xs ${inMonth ? (key === today ? "bg-accent-soft/50 hover:bg-accent-soft" : "hover:bg-surface-2") : "bg-surface-2/60 text-muted hover:bg-surface-2"}`}
             >
               <span
                 className={`inline-flex h-5 w-5 items-center justify-center rounded-full ${
