@@ -5,6 +5,7 @@ import { getI18n } from "@/i18n";
 import { localePath } from "@/i18n/config";
 import { AppNav } from "@/components/app-nav";
 import { LanguageMenu } from "@/components/language-menu";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { PageTransition } from "@/components/page-transition";
 import { SidebarProfile, SidebarProfileSkeleton } from "@/components/sidebar-profile";
 
@@ -19,7 +20,10 @@ export default async function AppLayout({ children }: LayoutProps<"/[lang]">) {
           <Link href={localePath(locale, "/")} className="inline-flex min-h-11 items-center text-[0.9375rem] font-semibold tracking-tight md:hidden">
             <Brand name={t.meta.appName} />
           </Link>
-          <LanguageMenu locale={locale} label={t.profile.language} saveToAccount />
+          <div className="flex items-center gap-2">
+            <ThemeToggle labels={{ theme: t.profile.theme, dark: t.profile.themeDark }} />
+            <LanguageMenu locale={locale} label={t.profile.language} saveToAccount />
+          </div>
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-4 pt-5 sm:px-6 md:pt-8">

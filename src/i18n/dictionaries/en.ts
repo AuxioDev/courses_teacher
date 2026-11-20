@@ -290,6 +290,8 @@ export const en = {
   profile: {
     title: "Profile",
     language: "Language",
+    theme: "Theme",
+    themeDark: "Dark",
     timezone: "Timezone",
     logout: "Log out",
     security: "Security",

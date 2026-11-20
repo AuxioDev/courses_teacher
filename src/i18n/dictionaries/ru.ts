@@ -288,6 +288,8 @@ export const ru: Dictionary = {
   profile: {
     title: "Профиль",
     language: "Язык",
+    theme: "Тема",
+    themeDark: "Тёмная",
     timezone: "Часовой пояс",
     logout: "Выйти",
     security: "Безопасность",
