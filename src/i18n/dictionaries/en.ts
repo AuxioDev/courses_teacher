@@ -6,7 +6,7 @@ import { studentMessagesEn } from "./student-messages";
 export const en = {
   ...studentMessagesEn,
   meta: {
-    appName: "Teacher App",
+    appName: "SkyEd Teacher App",
     description: "Your lessons, groups, homework and marks in one place.",
   },
   nav: { dashboard: "Dashboard", lessons: "My lessons", groups: "My groups", homework: "To check", profile: "Profile", main: "Main" },

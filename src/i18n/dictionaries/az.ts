@@ -4,7 +4,7 @@ import { studentMessagesAz } from "./student-messages";
 export const az: Dictionary = {
   ...studentMessagesAz,
   meta: {
-    appName: "Müəllim Paneli",
+    appName: "SkyEd Müəllim Paneli",
     description: "Dərsləriniz, qruplarınız, tapşırıqlarınız və qiymətləriniz bir yerdə.",
   },
   nav: { dashboard: "İdarə paneli", lessons: "Dərslərim", groups: "Qruplarım", homework: "Yoxlama", profile: "Profil", main: "Əsas" },

@@ -6,6 +6,7 @@ import { getI18n } from "@/i18n";
 import "../globals.css";
 import "../role-theme.css";
 import "../motion.css";
+import "../brand.css";
 import { ThemeBoot } from "@/components/theme-boot";
 
 const bodyFont = Inter({

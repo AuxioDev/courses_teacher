@@ -2,10 +2,12 @@
 
 import { Suspense, type ComponentType, type ReactNode, type SVGProps } from "react";
 import Link from "next/link";
+import { Brand } from "@/components/brand";
+import Image from "next/image";
 import { LinkPending } from "./link-pending";
 import { usePathname } from "next/navigation";
 import { localePath, type Locale } from "@/i18n/config";
-import { BookIcon, CalendarIcon, SunIcon, TaskIcon, UserIcon, UsersIcon } from "./icons";
+import { CalendarIcon, SunIcon, TaskIcon, UserIcon, UsersIcon } from "./icons";
 
 export type NavLabels = {
   dashboard: string;
@@ -79,10 +81,8 @@ function Side({ locale, labels, pathname, footer }: ViewProps) {
         href={localePath(locale, "/")}
         className="flex h-[3.25rem] shrink-0 items-center gap-2.5 px-4 text-[0.9375rem] font-semibold tracking-tight max-lg:justify-center max-lg:px-0"
       >
-        <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-accent text-accent-ink">
-          <BookIcon width={16} height={16} />
-        </span>
-        <span className="max-lg:sr-only">{labels.appName}</span>
+        <Image src="/icon.svg" alt="" width={28} height={28} className="brand-mark h-[28px] w-[28px] shrink-0" />
+        <Brand name={labels.appName} className="max-lg:sr-only" />
       </Link>
       <nav aria-label={labels.main} className="flex-1 overflow-y-auto px-3 pb-4 pt-1">
         <ul className="space-y-0.5">
